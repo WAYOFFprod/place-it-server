@@ -25,11 +25,12 @@ class CanvaController extends Controller
 
     public function createCanva(CreateCanvasRequest $request) {
         $canva = Canva::find(1);
-
-        // $canva = Canva::create([
-        //     "width" => $request->width,
-        //     "height" => $request->height
-        // ]);
+        if(empty($canva)) {
+            $canva = Canva::create([
+                "width" => $request->width,
+                "height" => $request->height
+            ]);
+        }
 
         $imageCreated = ImageService::createImage($canva->id, $canva->width, $canva->height);
         return $imageCreated;
