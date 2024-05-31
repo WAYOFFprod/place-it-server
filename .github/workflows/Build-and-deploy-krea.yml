@@ -45,7 +45,7 @@ jobs:
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
-          password: ${{ secrets.FTP_PASSWORD }}
+          password: ${{ secrets.SSH_PASSWORD }}
           port: ${{ secrets.SSH_PORT }}
           source: "*, !**/.git*, !**/.git*/**, !vendor/**, !**/node_modules/**, !storage/framework/cache/**, !public/hot, !packages/*"
           target: "server.place-it.wayoff.tv"
@@ -54,6 +54,6 @@ jobs:
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
-          password: ${{ secrets.FTP_PASSWORD }}
+          password: ${{ secrets.SSH_PASSWORD }}
           port: ${{ secrets.SSH_PORT }}
           script: cd server.place-it.wayoff.tv/ && sh run.sh
