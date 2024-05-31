@@ -27,8 +27,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-        with:
-          submodules: "true"
       - name: Install dependencies
         uses: php-actions/composer@v6
         with:
@@ -47,7 +45,7 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           password: ${{ secrets.SSH_PASSWORD }}
           port: ${{ secrets.SSH_PORT }}
-          source: "*, !**/.git*, !**/.git*/**, !vendor/**, !**/node_modules/**, !storage/framework/cache/**, !public/hot, !packages/*"
+          source: "*, !**/.git*, !**/.git*/**, !vendor/**, !**/node_modules/**, !storage/framework/cache/**, !public/hot"
           target: "server.place-it.wayoff.tv"
       - name: Composer install over SSH
         uses: appleboy/ssh-action@v1.0.0
