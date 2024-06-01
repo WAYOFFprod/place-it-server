@@ -9,7 +9,7 @@ echo "export PATH=/opt/php82/bin:\$PATH" >> /.bash_profile
 # Put the application into maintenance
 (php artisan down) || true
 
-mkdir -p /var/www/html/storage/app/public/canvas
+mkdir -p /var/www/html/storage/app/canvas
 
 cd server.place-it.wayoff.tv/
 
