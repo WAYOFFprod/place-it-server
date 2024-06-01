@@ -1,14 +1,18 @@
 <?php
 namespace App\Services;
 
+use Illuminate\Support\Facades\Storage;
+
 class ImageService {
     public static function getBase64Image($id) : string
     {
         $path = self::getPath($id);
+
         $type = pathinfo($path, PATHINFO_EXTENSION);
         $data = file_get_contents($path);
         return 'data:image/' . $type . ';base64,' . base64_encode($data);
     }
+
     public static function createImage($id, $width, $height) {
         $path = self::getPath($id);
         if (file_exists($path)) {
@@ -26,9 +30,8 @@ class ImageService {
             255,
             255
         );
-        // TODO: create file before saving it
 
-        $path = public_path('storage')."/canvas/".$id.".png";
+
 
         return imagepng(
             $image,
@@ -65,31 +68,7 @@ class ImageService {
     }
 
     static function getPath(int $id) {
-        return public_path('storage')."/canvas/".$id.".png";
-    }
-
-    public static function createImageWithPixelArray(Array $pixels, $width, $height) {
-        $image = imagecreate($width, $height);
-
-        foreach ($pixels as $i => $color) {
-            $x = $i % $width;
-            $y = floor($i / $width);
-            $isPlaced = imagesetpixel(
-                $image,
-                $x,
-                $y,
-                $color
-            );
-        }
-
-        $path = public_path('storage')."/image.png";
-        // TODO: save image
-        $isImageSaved = imagepng(
-            $image,
-            $path
-        );
-
-        dd($isImageSaved);
+        return config('filesystems.disks.canvas.root')."/".$id.".png";
     }
 
     public static function updateImage(Array $pixels, Array $colors, int $id) {
