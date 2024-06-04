@@ -50,7 +50,7 @@ class CanvaController extends Controller
 
         $validPixels = array_filter(
             $request->pixels,
-            function (string $pixel) use($availableColors) {
+            function ($pixel) use($availableColors) {
                 if (in_array($pixel, $availableColors)) {
                     return true;
                 };
