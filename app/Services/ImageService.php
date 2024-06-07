@@ -2,6 +2,7 @@
 namespace App\Services;
 
 use Illuminate\Support\Facades\Storage;
+use Number;
 
 class ImageService {
     public static function getBase64Image($id) : string
@@ -79,6 +80,7 @@ class ImageService {
 
         $colorsIds = self::prepColors($image, $pixels, $colors);
         foreach ($pixels as $i => $color) {
+            if(gettype($i) == 'Nan') return;
             $x = $i % $width;
             $y = (int)floor((int)$i / $width);
             // dd($x,$y, $i / $width,);
