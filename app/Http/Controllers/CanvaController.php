@@ -17,6 +17,7 @@ class CanvaController extends Controller
         //todo: return image base64
         $canva = Canva::find($id);
         return response()->json([
+            "id" => $canva->id,
             "width" => $canva->width,
             "height" => $canva->height,
             "colors" => $canva->colors,
