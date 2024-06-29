@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Route;
      Route::post('/canvas/color/add', [CanvaController::class, 'addColors']);
      Route::post('/canvas/create', [CanvaController::class, 'createCanva']);
      Route::get('/session', [AuthController::class, 'getSession']);
+     Route::post('/user/update', [AuthController::class, 'update']);
 });
 Route::get('/canvas', [CanvaController::class, 'getCanvas']);
 

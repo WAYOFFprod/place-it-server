@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UpdateUserRequest;
+use App\Http\Resources\UserResource;
 use Auth;
 use Illuminate\Http\Request;
 
@@ -16,8 +18,24 @@ class AuthController extends Controller
         }
         return response()->json([
             'isConnected' => true,
-            'email' => $user->email
+            'user' => new UserResource($user)
         ], 200);
+    }
+
+    public function update(UpdateUserRequest $request) {
+        $user = Auth::user();
+
+        if(empty($user)) {
+            return response()->json([
+                'message' => "not authorised"
+            ], 403);
+        }
+
+        $user[$request->field] = $request->value;
+        $user->save();
+
+        return new UserResource($user);
+
     }
 
 
