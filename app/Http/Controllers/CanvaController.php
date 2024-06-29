@@ -5,11 +5,13 @@ namespace App\Http\Controllers;
 use App\Http\Requests\AddColorRequest;
 use App\Http\Requests\CreateCanvasRequest;
 use App\Http\Requests\GetCanvaRequest;
-use App\Http\Requests\PlacePixelRequest;
+use App\Http\Resources\CanvaResource;
 use App\Http\Requests\PlacePixelsRequest;
 use App\Models\Canva;
 use App\Services\ImageService;
+use Auth;
 use DB;
+use Request;
 
 class CanvaController extends Controller
 {
@@ -24,20 +26,31 @@ class CanvaController extends Controller
             "image" => ImageService::getBase64Image($id),
         ]);
     }
+    public function getCanvas(Request $request) {
+        $user = Auth::user();
+        $canvas = [];
+        if(!empty($user)) {
+            $canvas = $user->canvas()->get();
+        }
+        return CanvaResource::collection($canvas);
+    }
 
     public function createCanva(CreateCanvasRequest $request) {
-        DB::table('canvas')->truncate();
-        // $canva = Canva::find(1);
-        // if(!empty($canva)) {
-        // }
+        // DB::table('canvas')->truncate();
+        $user = Auth::user();
 
-        $canva = Canva::create([
+        $canva = $user->canvas()->create([
+            "name" => $request->name,
+            "category" => $request->category,
+            "access" => $request->access,
+            "visibility" => $request->visibility,
             "width" => $request->width,
-            "height" => $request->height
+            "height" => $request->height,
+            "colors" => $request->colors
         ]);
 
         $imageCreated = ImageService::createImage($canva->id, $canva->width, $canva->height);
-        return $imageCreated;
+        return new CanvaResource($canva);
     }
 
     public function addColors(AddColorRequest $request) {

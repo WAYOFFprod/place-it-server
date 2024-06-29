@@ -13,8 +13,13 @@ return new class extends Migration
     {
         Schema::create('canvas', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->nullable();
+            $table->string('name');
             $table->integer('width');
             $table->integer('height');
+            $table->enum('category', ["pixelwar", "artistic", "free"]);
+            $table->enum('access', ['open', 'invite_only', 'request_only', 'closed']);
+            $table->enum('visibility', ['public', 'friends_only', 'private']);
             $table->json('colors')->nullable();
             $table->timestamps();
         });

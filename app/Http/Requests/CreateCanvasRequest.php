@@ -2,7 +2,11 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\CanvaAccess;
+use App\Enums\CanvaCategory;
+use App\Enums\CanvaVisibility;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class CreateCanvasRequest extends FormRequest
 {
@@ -22,8 +26,13 @@ class CreateCanvasRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'name' => 'required',
             'width' => 'required|integer',
-            'height' => 'required|integer'
+            'height' => 'required|integer',
+            'colors' => 'required',
+            'category' => ['required', Rule::enum(CanvaCategory::class)],
+            'access' => ['required', Rule::enum(CanvaAccess::class)],
+            'visibility' => ['required', Rule::enum(CanvaVisibility::class)],
         ];
     }
 }

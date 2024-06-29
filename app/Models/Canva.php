@@ -10,6 +10,10 @@ class Canva extends Model
     use HasFactory;
 
     protected $fillable = [
+        'name',
+        'category',
+        'access',
+        'visibility',
         'width',
         'height',
         'colors'
