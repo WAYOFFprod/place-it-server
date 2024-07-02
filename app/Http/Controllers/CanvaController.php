@@ -19,13 +19,7 @@ class CanvaController extends Controller
     public function getCanva(GetCanvaRequest $request, $id) {
         //todo: return image base64
         $canva = Canva::find($id);
-        return response()->json([
-            "id" => $canva->id,
-            "width" => $canva->width,
-            "height" => $canva->height,
-            "colors" => $canva->colors,
-            "image" => ImageService::getBase64Image($id),
-        ]);
+        return new CanvaResource($canva);
     }
     public function getCanvas(Request $request) {
         $user = Auth::user();
