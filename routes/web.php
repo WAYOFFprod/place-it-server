@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Route;
  Route::middleware('auth')->group(function () {
      Route::post('/canvas/color/add', [CanvaController::class, 'addColors']);
      Route::post('/canvas/create', [CanvaController::class, 'createCanva']);
+     Route::delete('/canvas/{id}', [CanvaController::class, 'deleteCanva']);
      Route::get('/session', [AuthController::class, 'getSession']);
      Route::post('/user/update', [AuthController::class, 'update']);
 });

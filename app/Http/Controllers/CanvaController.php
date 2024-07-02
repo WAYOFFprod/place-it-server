@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\AddColorRequest;
 use App\Http\Requests\CreateCanvasRequest;
+use App\Http\Requests\DeleteCanvaRequest;
 use App\Http\Requests\GetCanvaRequest;
 use App\Http\Resources\CanvaResource;
 use App\Http\Requests\PlacePixelsRequest;
@@ -51,6 +52,22 @@ class CanvaController extends Controller
 
         $imageCreated = ImageService::createImage($canva->id, $canva->width, $canva->height);
         return new CanvaResource($canva);
+    }
+
+    public function deleteCanva(DeleteCanvaRequest $request, $id) {
+        // DB::table('canvas')->truncate();
+        $user = Auth::user();
+
+        $canva = $user->canvas()->find($id);
+
+        $canva->delete();
+
+        $path = ImageService::deleteImage($id);
+
+        return response()->json([
+            'message' => "deleted successfully",
+            'id' => $id
+        ]);
     }
 
     public function addColors(AddColorRequest $request) {
