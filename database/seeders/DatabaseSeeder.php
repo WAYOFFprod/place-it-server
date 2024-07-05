@@ -15,9 +15,10 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::factory()->create([
-            'name' => 'admin',
-            'email' => 'raphael@wayoff.ch',
+        $this->call([
+            RoleSeeder::class,
+            UserSeeder::class,
+            CanvaSeeder::class
         ]);
     }
 }

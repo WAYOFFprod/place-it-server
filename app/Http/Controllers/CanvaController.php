@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\CanvasRequestType;
 use App\Http\Requests\AddColorRequest;
 use App\Http\Requests\CreateCanvasRequest;
 use App\Http\Requests\DeleteCanvaRequest;
 use App\Http\Requests\GetCanvaRequest;
+use App\Http\Requests\GetCanvasRequest;
 use App\Http\Resources\CanvaResource;
 use App\Http\Requests\PlacePixelsRequest;
 use App\Models\Canva;
 use App\Services\ImageService;
 use Auth;
-use DB;
-use Request;
 
 class CanvaController extends Controller
 {
@@ -21,12 +21,24 @@ class CanvaController extends Controller
         $canva = Canva::find($id);
         return new CanvaResource($canva);
     }
-    public function getCanvas(Request $request) {
+    public function getCanvas(GetCanvasRequest $request) {
         $user = Auth::user();
         $canvas = [];
-        if(!empty($user)) {
-            $canvas = $user->canvas()->get();
+        switch ($request->scope) {
+            case CanvasRequestType::Community->value:
+                $canvas = Canva::community()->limit(10)->get();
+                break;
+            case CanvasRequestType::Personal->value:
+                if(!empty($user)) {
+                    $canvas = $user->canvas()->get();
+                }
+                break;
+
+            default:
+                # code...
+                break;
         }
+
         return CanvaResource::collection($canvas);
     }
 

@@ -16,7 +16,7 @@ class CanvaResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $userId = Auth::user()->id;
+        $userId = Auth::user() ? Auth::user()->id : -1;
         return [
             "id" => $this->id,
             "name" => $this->name,
@@ -24,9 +24,9 @@ class CanvaResource extends JsonResource
             "height" => $this->height,
             "colors" => $this->colors,
             "owned" => $this->user_id == $userId,
-            "category" => "pixelwar", // pixelwar, artistic, free
-            "access" => 'open', // open, invite_only, request_only closed
-            "visibility" => 'public', // public, friends_only, private
+            "category" => $this->category, // pixelwar, artistic, free
+            "access" => $this->access, // open, invite_only, request_only closed
+            "visibility" => $this->visibility, // public, friends_only, private
             "image" => ImageService::getBase64Image($this->id),
         ];
     }
