@@ -8,6 +8,7 @@ use App\Http\Requests\CreateCanvasRequest;
 use App\Http\Requests\DeleteCanvaRequest;
 use App\Http\Requests\GetCanvaRequest;
 use App\Http\Requests\GetCanvasRequest;
+use App\Http\Requests\JoinCanvaRequest;
 use App\Http\Resources\CanvaResource;
 use App\Http\Requests\PlacePixelsRequest;
 use App\Models\Canva;
@@ -43,7 +44,7 @@ class CanvaController extends Controller
     }
 
     public function createCanva(CreateCanvasRequest $request) {
-        // DB::table('canvas')->truncate();
+
         $user = Auth::user();
 
         $canva = $user->canvas()->create([
@@ -56,8 +57,35 @@ class CanvaController extends Controller
             "colors" => $request->colors
         ]);
 
+        $user->participates()->attach($canva->id,['status' => 'accepted']);
+
         $imageCreated = ImageService::createImage($canva->id, $canva->width, $canva->height);
         return new CanvaResource($canva);
+    }
+
+    public function joinCanva(JoinCanvaRequest $request, $id) {
+        $canva = Canva::find($id);
+        $user = Auth::user();
+
+        if(empty($canva)) {
+            return response()->json([
+                'message' => 'nothing to see here',
+                'id' => $canva->id
+            ], 403);
+        }
+        $accessStatus = $canva->requestAccess($user);
+        if($accessStatus) {
+            return response()->json([
+                'message' => 'requested',
+                'accessStatus' => $accessStatus,
+                'id' => $canva->id
+            ], 200);
+        } else {
+            return response()->json([
+                'message' => 'nothing to see here',
+                'id' => $canva->id
+            ], 403);
+        }
     }
 
     public function deleteCanva(DeleteCanvaRequest $request, $id) {

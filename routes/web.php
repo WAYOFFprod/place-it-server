@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Route;
      Route::post('/canvas/create', [CanvaController::class, 'createCanva'])
         ->middleware(['permission:create-canvas']);
      Route::delete('/canvas/{id}', [CanvaController::class, 'deleteCanva']);
+     Route::get('/canva/join/{id}', [CanvaController::class, 'joinCanva']);
      Route::get('/session', [AuthController::class, 'getSession']);
      Route::post('/user/update', [AuthController::class, 'update']);
 });

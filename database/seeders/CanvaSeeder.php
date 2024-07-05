@@ -35,6 +35,10 @@ class CanvaSeeder extends Seeder
             $this->createCanvaForUser($user);
             $this->createPublicCanvas($user);
         }
+
+        foreach ($users as $key => $user) {
+            $this->participateInHalfCanvas($user);
+        }
     }
 
     private function createCanvaForUser($user) {
@@ -63,6 +67,7 @@ class CanvaSeeder extends Seeder
             ->create();
 
         foreach ($canvas as $key => $canva) {
+            $user->participates()->attach($canva->id,['status' => 'accepted']);
             $imageCreated = ImageService::createImage($canva->id, $canva->width, $canva->height);
         }
         $user->canvas()->saveMany($canvas);
@@ -89,9 +94,18 @@ class CanvaSeeder extends Seeder
             ->create();
 
         foreach ($canvas as $key => $canva) {
+            $user->participates()->attach($canva->id,['status' => 'accepted']);
             $imageCreated = ImageService::createImage($canva->id, $canva->width, $canva->height);
         }
         $user->canvas()->saveMany($canvas);
+    }
+
+    private function participateInHalfCanvas(User $user) {
+        $canvas = Canva::community()->get();
+        for ($i=0; $i < round($canvas->count() / 2); $i++) {
+            $canva = $canvas->random();
+            $user->participates()->attach($canva->id, ['status' => 'accepted']);
+        }
     }
 
     private function shiftArrays() {

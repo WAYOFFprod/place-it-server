@@ -52,4 +52,8 @@ class User extends Authenticatable
     public function canvas() {
         return $this->hasMany(Canva::class);
     }
+
+    public function participates() {
+        return $this->belongsToMany(Canva::class, 'participations');
+    }
 }
