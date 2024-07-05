@@ -37,7 +37,7 @@ class CanvaSeeder extends Seeder
         }
 
         foreach ($users as $key => $user) {
-            $this->participateInHalfCanvas($user);
+            // $this->participateInHalfCanvas($user);
         }
     }
 

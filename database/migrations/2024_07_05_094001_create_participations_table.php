@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('participations', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('canva_id');
+            $table->foreignId('canva_id')->cascadeOnDelete();
             $table->foreignId('user_id');
             $table->enum('status', ['sent', 'rejected', 'accepted']);
             $table->timestamps();
