@@ -25,6 +25,16 @@ class Canva extends Model
         })
         ->where('visibility', CanvaVisibility::Public->value);
     }
+    public function scopeFavorit(Builder $query) {
+        $user = Auth::user();
+        if($user) {
+            $id = $user->id;
+            $query->whereHas('likedBy', function (Builder $userQuery) use($id) {
+                $userQuery->where('users.id', $id);
+            });
+        }
+
+    }
 
     protected $fillable = [
         'name',
@@ -77,5 +87,9 @@ class Canva extends Model
 
     public function participates() {
         return $this->belongsToMany(User::class, 'participations');
+    }
+
+    public function likedBy() {
+        return $this->belongsToMany(User::class, 'likes');
     }
 }

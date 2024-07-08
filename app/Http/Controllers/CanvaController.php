@@ -11,6 +11,7 @@ use App\Http\Requests\GetCanvasRequest;
 use App\Http\Requests\JoinCanvaRequest;
 use App\Http\Resources\CanvaResource;
 use App\Http\Requests\PlacePixelsRequest;
+use App\Http\Requests\ToggleLikeCanvaRequest;
 use App\Models\Canva;
 use App\Services\ImageService;
 use Auth;
@@ -28,6 +29,9 @@ class CanvaController extends Controller
         switch ($request->scope) {
             case CanvasRequestType::Community->value:
                 $query = Canva::query()->community();
+                if($request->favorit) {
+                    $query->favorit();
+                }
                 if($request->sort) {
                     $query->orderBy('updated_at', $request->sort);
                 }
@@ -37,6 +41,9 @@ class CanvaController extends Controller
             case CanvasRequestType::Personal->value:
                 if(!empty($user)) {
                     $query = Canva::query()->where('user_id', $user->id);
+                    if($request->favorit) {
+                        $query->favorit();
+                    }
                     if($request->sort) {
                         $query->orderBy('updated_at', $request->sort);
                     }
@@ -95,6 +102,16 @@ class CanvaController extends Controller
                 'id' => $canva->id
             ], 403);
         }
+    }
+
+    public function toggleLike(ToggleLikeCanvaRequest $request) {
+        $user = Auth::user();
+        $added = $user->toggleLikeCanvas($request->canvaId);
+        return response()->json([
+            'message' => "canva ".($added ? 'added to favorit' : 'removed from favorit'),
+            'added' => $added,
+            'id' => $request->canvaId
+        ]);
     }
 
     public function deleteCanva(DeleteCanvaRequest $request, $id) {

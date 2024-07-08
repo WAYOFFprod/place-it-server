@@ -16,7 +16,12 @@ class CanvaResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $userId = Auth::user() ? Auth::user()->id : -1;
+        $user = Auth::user();
+        $userId = -1;
+        if($user) {
+            $userId = $user->id;
+        }
+        $isLiked = $this->likedBy()->where('users.id', $userId)->exists();
         $participation = $this->userParticipation($userId);
         $status = $participation? $participation->status : null;
         return [
@@ -31,7 +36,8 @@ class CanvaResource extends JsonResource
             "visibility" => $this->visibility, // public, friends_only, private
             "participationStatus" => $status, // null, accepted, sent, rejected
             "image" => ImageService::getBase64Image($this->id),
-            "participants" => $this->participates()->count()
+            "participants" => $this->participates()->count(),
+            "isLiked" => $isLiked,
         ];
     }
 }

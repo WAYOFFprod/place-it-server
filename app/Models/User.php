@@ -56,4 +56,18 @@ class User extends Authenticatable
     public function participates() {
         return $this->belongsToMany(Canva::class, 'participations');
     }
+    public function toggleLikeCanvas($canvaId) {
+        $isLiked = $this->likedCanvas()->where('canvas.id', $canvaId)->exists();
+        if($isLiked) {
+            $this->likedCanvas()->detach($canvaId);
+            return false;
+        } else {
+            $this->likedCanvas()->attach($canvaId);
+            return true;
+        }
+    }
+
+    public function likedCanvas() {
+        return $this->belongsToMany(Canva::class, 'likes');
+    }
 }

@@ -2,11 +2,9 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\CanvasRequestType;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
-class GetCanvasRequest extends FormRequest
+class ToggleLikeCanvaRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,9 +22,7 @@ class GetCanvasRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'scope' => ['required', Rule::enum(CanvasRequestType::class)],
-            'sort' => [Rule::in(['asc', 'desc'])],
-            'favorit' => 'boolean'
+            'canvaId' => 'required',
         ];
     }
 }
