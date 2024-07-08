@@ -60,6 +60,7 @@ class CanvaController extends Controller
         $user->participates()->attach($canva->id,['status' => 'accepted']);
 
         $imageCreated = ImageService::createImage($canva->id, $canva->width, $canva->height);
+
         return new CanvaResource($canva);
     }
 
