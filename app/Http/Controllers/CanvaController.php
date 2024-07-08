@@ -27,11 +27,11 @@ class CanvaController extends Controller
         $canvas = [];
         switch ($request->scope) {
             case CanvasRequestType::Community->value:
-                $canvas = Canva::community()->limit(10)->get();
+                $canvas = Canva::community()->orderBy('updated_at','desc')->limit(10)->get();
                 break;
             case CanvasRequestType::Personal->value:
                 if(!empty($user)) {
-                    $canvas = $user->canvas()->get();
+                    $canvas = $user->canvas()->orderBy('updated_at','desc')->limit(10)->get();
                 }
                 break;
 
@@ -128,6 +128,10 @@ class CanvaController extends Controller
         $colors = array_unique($validPixels);
 
         ImageService::updateImage($validPixels, $colors, $request->id);
+
+        // update timestamp updated_at
+        $canva->touch();
+
         return response()->json([
             "status" => "success"
         ], 200);
