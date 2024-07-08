@@ -27,11 +27,20 @@ class CanvaController extends Controller
         $canvas = [];
         switch ($request->scope) {
             case CanvasRequestType::Community->value:
-                $canvas = Canva::community()->orderBy('updated_at','desc')->limit(10)->get();
+                $query = Canva::query()->community();
+                if($request->sort) {
+                    $query->orderBy('updated_at', $request->sort);
+                }
+                $canvas = $query->limit(10)->get();
+
                 break;
             case CanvasRequestType::Personal->value:
                 if(!empty($user)) {
-                    $canvas = $user->canvas()->orderBy('updated_at','desc')->limit(10)->get();
+                    $query = Canva::query()->where('user_id', $user->id);
+                    if($request->sort) {
+                        $query->orderBy('updated_at', $request->sort);
+                    }
+                    $canvas = $query->limit(10)->get();
                 }
                 break;
 
@@ -39,7 +48,6 @@ class CanvaController extends Controller
                 # code...
                 break;
         }
-
         return CanvaResource::collection($canvas);
     }
 

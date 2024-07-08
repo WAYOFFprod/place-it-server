@@ -24,6 +24,7 @@ class GetCanvasRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'sort' => [Rule::in(['asc', 'desc'])],
             'scope' => ['required', Rule::enum(CanvasRequestType::class)]
         ];
     }
