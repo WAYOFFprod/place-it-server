@@ -38,6 +38,7 @@ class CanvaResource extends JsonResource
             "image" => ImageService::getBase64Image($this->id),
             "participants" => $this->participates()->count(),
             "isLiked" => $isLiked,
+            "created_at" => $this->created_at
         ];
     }
 }

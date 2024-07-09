@@ -26,7 +26,8 @@ class GetCanvasRequest extends FormRequest
         return [
             'scope' => ['required', Rule::enum(CanvasRequestType::class)],
             'sort' => [Rule::in(['asc', 'desc'])],
-            'favorit' => 'boolean'
+            'favorit' => 'boolean',
+            'search' => 'string'
         ];
     }
 }

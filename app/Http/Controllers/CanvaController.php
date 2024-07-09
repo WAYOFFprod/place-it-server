@@ -26,6 +26,7 @@ class CanvaController extends Controller
     public function getCanvas(GetCanvasRequest $request) {
         $user = Auth::user();
         $canvas = [];
+        $query = null;
         switch ($request->scope) {
             case CanvasRequestType::Community->value:
                 $query = Canva::query()->community();
@@ -35,8 +36,9 @@ class CanvaController extends Controller
                 if($request->sort) {
                     $query->orderBy('updated_at', $request->sort);
                 }
-                $canvas = $query->limit(10)->get();
-
+                if($request->search) {
+                    $query->where('name', 'LIKE', '%'.$request->search.'%');
+                }
                 break;
             case CanvasRequestType::Personal->value:
                 if(!empty($user)) {
@@ -47,15 +49,27 @@ class CanvaController extends Controller
                     if($request->sort) {
                         $query->orderBy('updated_at', $request->sort);
                     }
+                    if($request->search) {
+                        $query->where('name', 'LIKE', '%'.$request->search.'%');
+                    }
                     $canvas = $query->limit(10)->get();
+                } else {
+                    $query = Canva::query()->where('user_id', null);
                 }
                 break;
 
             default:
-                # code...
+                $query = Canva::query();
                 break;
         }
+
+        $canvas = $query->limit(10)->get();
+
         return CanvaResource::collection($canvas);
+    }
+
+    private function filterQuery() {
+
     }
 
     public function createCanva(CreateCanvasRequest $request) {
