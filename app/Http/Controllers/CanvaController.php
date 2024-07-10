@@ -15,12 +15,33 @@ use App\Http\Requests\ToggleLikeCanvaRequest;
 use App\Models\Canva;
 use App\Services\ImageService;
 use Auth;
+use Illuminate\Support\Facades\Http;
 
 class CanvaController extends Controller
 {
     public function getCanva(GetCanvaRequest $request, $id) {
-        //todo: return image base64
         $canva = Canva::find($id);
+        if(empty($canva)) {
+            return response()->json([
+                'message' => 'canva does not exist',
+                'status' => 404
+            ], 404);
+        }
+        $user = Auth::user();
+
+        // TODO: canva if accesible or owned
+
+        if(empty($user)) {
+            return new CanvaResource($canva);
+        }
+
+        // TODO: check if user has write permission
+        $canEdit = true;
+        if($canEdit) {
+
+            return new CanvaResource($canva);
+        }
+
         return new CanvaResource($canva);
     }
     public function getCanvas(GetCanvasRequest $request) {
