@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CanvaController;
+use App\Http\Controllers\FriendController;
 use Illuminate\Support\Facades\Route;
 
 /**
@@ -18,6 +19,14 @@ use Illuminate\Support\Facades\Route;
      Route::post('/canva/like', [CanvaController::class, 'toggleLike']);
      Route::get('/session', [AuthController::class, 'getSession']);
      Route::post('/user/update', [AuthController::class, 'update']);
+
+     // friends
+     Route::post('/friend/request', [FriendController::class, 'requestFriend']);
+     Route::post('/friend/accept', [FriendController::class, 'acceptFriend']);
+     Route::post('/friend/reject', [FriendController::class, 'rejectFriend']);
+
+     Route::get('/friends/requests', [FriendController::class, 'getRequests']);
+     Route::get('/friends', [FriendController::class, 'getFriends']);
 });
 Route::get('/canvas', [CanvaController::class, 'getCanvas']);
 
