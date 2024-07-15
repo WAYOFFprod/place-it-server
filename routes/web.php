@@ -24,6 +24,7 @@ use Illuminate\Support\Facades\Route;
      Route::post('/friend/request', [FriendController::class, 'requestFriend']);
      Route::post('/friend/accept', [FriendController::class, 'acceptFriend']);
      Route::post('/friend/reject', [FriendController::class, 'rejectFriend']);
+     Route::post('/friend/block', [FriendController::class, 'blockFriend']);
 
      Route::get('/friends/requests', [FriendController::class, 'getRequests']);
      Route::get('/friends', [FriendController::class, 'getFriends']);

@@ -78,20 +78,25 @@ class User extends Authenticatable
     public function friendsTo()
     {
         return $this->belongsToMany(User::class, 'friendships', 'user_id', 'friend_id')
-            ->withPivot('status')
+            ->withPivot(['status', 'user_id'])
             ->withTimestamps();
     }
 
     public function friendsFrom()
     {
         return $this->belongsToMany(User::class, 'friendships', 'friend_id', 'user_id')
-            ->withPivot('status')
+            ->withPivot(['status', 'user_id'])
             ->withTimestamps();
     }
 
     public function friends()
     {
         return $this->mergedRelationWithModel(User::class, 'friends_view');
+    }
+
+    public function blocked()
+    {
+        return $this->mergedRelationWithModel(User::class, 'blocked_view');
     }
 
     public function pendingFriendsTo()
@@ -122,5 +127,15 @@ class User extends Authenticatable
     public function notBlockedFriendsFrom()
     {
         return $this->friendsFrom()->wherePivot('status', '!=', FriendRequestStatus::Blocked->value);
+    }
+
+    public function blockedFriendsFrom()
+    {
+        return $this->friendsFrom()->wherePivot('status', FriendRequestStatus::Blocked->value);
+    }
+
+    public function blockedFriendsTo()
+    {
+        return $this->friendsTo()->wherePivot('status', FriendRequestStatus::Blocked->value);
     }
 }
