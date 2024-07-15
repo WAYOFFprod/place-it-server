@@ -79,8 +79,8 @@ class FriendController extends Controller
         $user = Auth::user();
         $friend = $user->notBlockedFriendsTo()->where('friend_id', $request->friend_id)->first();
         if(empty($friend)) {
-            // check if already bocked or blocked by
-            $friend = $user->blocked()->where('id', $request->friend_id)->first();
+            // check if already bocked
+            $friend = $user->blockedFriendsTo()->where('friend_id', $request->friend_id)->first();
             // if no result than add and block
             if(empty($friend)) {
                 $user->friendsTo()->attach($request->friend_id, ['status' => FriendRequestStatus::Blocked->value]);
