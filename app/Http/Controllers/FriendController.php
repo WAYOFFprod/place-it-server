@@ -34,7 +34,6 @@ class FriendController extends Controller
             ], 400);
         }
 
-        $friend = null;
         // if has standing request, accept existing request
         if($user->pendingFriendsFrom()->where('user_id',$request->friend_id)->count() > 0) {
             $friend = $user->pendingFriendsFrom()->where('user_id',$request->friend_id)->first();
