@@ -20,7 +20,8 @@ class FriendController extends Controller
             ], 400);
         }
 
-        if($user->friends()->find($request->friend_id)) {
+        $friend = $user->friends()->find($request->friend_id);
+        if(!empty($friend) && $friend->status == FriendRequestStatus::Accepted->value) {
             return response()->json([
                 'message'=> 'already friends'
             ], 400);
@@ -33,18 +34,18 @@ class FriendController extends Controller
             ], 400);
         }
 
+        $friend = null;
+        // if has standing request, accept existing request
         if($user->pendingFriendsFrom()->where('user_id',$request->friend_id)->count() > 0) {
             $friend = $user->pendingFriendsFrom()->where('user_id',$request->friend_id)->first();
             $friend->pivot->status = FriendRequestStatus::Accepted->value;
             $friend->pivot->save();
-            return response()->json([
-                'message'=> 'you are now friends with '.$friend->name
-            ], 201);
+        } else {
+            $user->friendsTo()->attach($request->friend_id, ['status' => FriendRequestStatus::Pending->value]);
+
+            $friend = $user->friendsTo()->where('friend_id', $request->friend_id)->first();
         }
 
-        $user->friendsTo()->attach($request->friend_id, ['status' => FriendRequestStatus::Pending->value]);
-
-        $friend = $user->friendsTo()->where('friend_id', $request->friend_id)->first();
 
         return new FriendResource($friend);
     }
@@ -97,6 +98,11 @@ class FriendController extends Controller
             ], 404);
         }
         return new FriendResource($friend);
+    }
+
+    public function getBlockedFriends(Request $request) {
+        $user = Auth::user();
+        return FriendResource::collection($user->blockedFriendsTo);
     }
 
     // get requests from other users to current user

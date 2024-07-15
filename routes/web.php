@@ -27,6 +27,7 @@ use Illuminate\Support\Facades\Route;
      Route::post('/friend/block', [FriendController::class, 'blockFriend']);
 
      Route::get('/friends/requests', [FriendController::class, 'getRequests']);
+     Route::get('/friends/blocked', [FriendController::class, 'getBlockedFriends']);
      Route::get('/friends', [FriendController::class, 'getFriends']);
 });
 Route::get('/canvas', [CanvaController::class, 'getCanvas']);
