@@ -166,7 +166,14 @@ class CanvaController extends Controller
     }
 
     public function replaceColors(AddColorRequest $request) {
+        $user = Auth::user();
         $canva = Canva::find($request->id);
+        if(!$canva->isOwnedBy($user)) {
+            return response()->json([
+                'message' => 'not allowed',
+                'statue' => 403
+            ],403);
+        }
         $canva->colors = $request->colors;
         $canva->save();
         return $canva;

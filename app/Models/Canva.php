@@ -53,6 +53,17 @@ class Canva extends Model
         ];
     }
 
+    public function isOwnedBy(User $user) {
+        return $this->user_id == $user->id;
+    }
+
+    // public function canEdit(User $user) {
+    //     if($this->user_id == $user->id) {
+    //         return true;
+    //     }
+
+    // }
+
     public function requestAccess(User $user) {
         // TODO: update with friend system exists
 
