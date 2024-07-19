@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Route;
 
  // authenticated
  Route::middleware('auth')->group(function () {
-     Route::post('/canvas/color/add', [CanvaController::class, 'addColors']);
+     Route::post('/canvas/color/replace', [CanvaController::class, 'replaceColors']);
      Route::post('/canvas/create', [CanvaController::class, 'createCanva'])
         ->middleware(['permission:create-canvas']);
      Route::delete('/canvas/{id}', [CanvaController::class, 'deleteCanva']);

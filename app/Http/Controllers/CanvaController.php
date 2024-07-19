@@ -165,7 +165,7 @@ class CanvaController extends Controller
         ]);
     }
 
-    public function addColors(AddColorRequest $request) {
+    public function replaceColors(AddColorRequest $request) {
         $canva = Canva::find($request->id);
         $canva->colors = $request->colors;
         $canva->save();
