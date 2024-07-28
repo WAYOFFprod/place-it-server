@@ -19,7 +19,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['https://websocket.place-it.wayoff.tv', 'https://place-it.wayoff.tv/', 'http://localhost:5173', 'https://localhost:3000'],
+    'allowed_origins' => ['https://websocket.place-it.wayoff.tv', 'https://place-it.wayoff.tv', 'http://localhost:5173', 'https://localhost:3000'],
 
     'allowed_origins_patterns' => [],
 
