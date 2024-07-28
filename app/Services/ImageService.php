@@ -12,10 +12,7 @@ class ImageService {
     }
 
     public static function createImage($id, $width, $height) {
-        $path = self::getPath($id);
-        if (file_exists($path)) {
-            unlink($path);
-        }
+        $path = ImageService::deleteImage($id);
 
         $file = fopen($path, 'w') or die("can't open file");
         fclose($file);
@@ -35,6 +32,14 @@ class ImageService {
             $image,
             $path
         );
+    }
+
+    public static function deleteImage(int $id) {
+        $path = self::getPath($id);
+        if (file_exists($path)) {
+            unlink($path);
+        }
+        return $path;
     }
 
     public static function addColors(int $id, array $colors) {

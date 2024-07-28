@@ -3,9 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
-class GetCanvaRequest extends FormRequest
+class RequestFriendRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,6 +22,7 @@ class GetCanvaRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'friend_id' => 'required|exists:users,id'
         ];
     }
 }
