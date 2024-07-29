@@ -182,7 +182,7 @@ class CanvaController extends Controller
     public function placePixel(PlacePixelsRequest $request) {
         $canva = Canva::find($request->id);
 
-        $availableColors = $canva->colors;
+        $availableColors = [...$canva->colors, '#ffffff'];
 
         $validPixels = array_filter(
             $request->pixels,
