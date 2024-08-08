@@ -53,8 +53,8 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost'),
-    'live_url' => env('LIVE_URL', 'http://localhost:3000'),
+    'url' => env('APP_URL', 'http://server.place-it.test'),
+    'live_url' => env('LIVE_URL', 'http://websocket.place-it.test:3000'),
 
     /*
     |--------------------------------------------------------------------------
