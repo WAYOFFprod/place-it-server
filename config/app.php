@@ -14,6 +14,7 @@ return [
     */
 
     'name' => env('APP_NAME', 'Laravel'),
+    'client' => env('DUSK_CLIENT', 'http://localhost:5173111'),
 
     /*
     |--------------------------------------------------------------------------

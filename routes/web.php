@@ -8,6 +8,9 @@ use Illuminate\Support\Facades\Route;
 /**
  * Canvas
  */
+Route::get('/', function(Request $request) {
+    return 'got here';
+});
 
  // authenticated
  Route::middleware('auth:sanctum')->group(function () {
