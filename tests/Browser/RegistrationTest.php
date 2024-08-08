@@ -5,6 +5,7 @@ namespace Tests\Browser;
 // use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 use Artisan;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTruncation;
 use Laravel\Dusk\Browser;
 use Str;
@@ -13,10 +14,11 @@ use Tests\DuskTestCase;
 
 class RegistrationTest extends DuskTestCase
 {
-    use DatabaseTruncation;
+    use DatabaseMigrations;
 
     protected $dropViews = true;
     protected $seed = true;
+    protected $exceptTables = ['personal_access_tokens'];
 
     protected function beforeTruncatingDatabase(): void
     {

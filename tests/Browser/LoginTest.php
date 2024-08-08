@@ -3,6 +3,7 @@
 namespace Tests\Browser;
 
 use Artisan;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTruncation;
 use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
@@ -13,9 +14,9 @@ class LoginTest extends DuskTestCase
 
     protected $dropViews = true;
     protected $seed = true;
+    protected $exceptTables = ['personal_access_tokens'];
 
-
-    protected function beforeTruncatingDatabase(): void
+    protected function afterTruncatingDatabase(): void
     {
         Artisan::call('db:seed');
     }
