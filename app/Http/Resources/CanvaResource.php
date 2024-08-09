@@ -41,7 +41,7 @@ class CanvaResource extends JsonResource
             "visibility" => $this->visibility, // public, friends_only, private
             "participationStatus" => $status, // null, accepted, sent, rejected
             "image" => ImageService::getBase64Image($this->id),
-            "participants" => $this->participates()->count(),
+            "participants" => $this->participates()->wherePivot('status', 'accepted')->count(),
             "isLiked" => $isLiked,
             "created_at" => $this->created_at,
             "currentPlayers" => $this->live_player_count
