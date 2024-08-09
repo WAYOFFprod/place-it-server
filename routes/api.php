@@ -12,4 +12,6 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/place-pixel', [CanvaController::class, 'placePixel'])
         ->middleware(['abilities:canvas:place-pixels']);
+    Route::post('/update-player-count', [CanvaController::class, 'updatePlayerCount'])
+        ->middleware(['abilities:canvas:place-pixels']);
 });

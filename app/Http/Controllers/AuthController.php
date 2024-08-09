@@ -9,16 +9,16 @@ use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
-    public  function getSession(){
+    public  function getSession(Request $request){
         $user = Auth::user();
         if(empty($user)) {
             return response()->json([
-                'isConnected' => false
+                'isConnected' => false,
             ], 200);
         }
         return response()->json([
             'isConnected' => true,
-            'user' => new UserResource($user)
+            'user' => new UserResource($user),
         ], 200);
     }
 

@@ -16,6 +16,10 @@ use App\Models\Canva;
 use App\Services\ImageService;
 use Auth;
 use Illuminate\Support\Facades\Http;
+use App\Enums\CanvaVisibility;
+use App\Enums\CanvaAccess;
+use Illuminate\Http\Request;
+use Log;
 
 class CanvaController extends Controller
 {
@@ -104,7 +108,8 @@ class CanvaController extends Controller
             "visibility" => $request->visibility,
             "width" => $request->width,
             "height" => $request->height,
-            "colors" => $request->colors
+            "colors" => $request->colors,
+            'live_player_count' => 0,
         ]);
 
         $user->participates()->attach($canva->id,['status' => 'accepted']);
@@ -179,8 +184,14 @@ class CanvaController extends Controller
         return $canva;
     }
 
+    public function updatePlayerCount(Request $request) {
+        $canva = Canva::findOrFail($request->id);
+        $canva->live_player_count = $request->playerCount;
+        $canva->save();
+    }
+
     public function placePixel(PlacePixelsRequest $request) {
-        $canva = Canva::find($request->id);
+        $canva = Canva::findOrFail($request->id);
 
         $availableColors = [...$canva->colors, '#ffffff'];
 

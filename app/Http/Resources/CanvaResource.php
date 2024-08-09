@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
+use App\Enums\CanvaAccess;
 use Log;
 
 class CanvaResource extends JsonResource
@@ -43,6 +44,7 @@ class CanvaResource extends JsonResource
             "participants" => $this->participates()->count(),
             "isLiked" => $isLiked,
             "created_at" => $this->created_at,
+            "currentPlayers" => $this->live_player_count
         ];
     }
 
