@@ -20,7 +20,6 @@ Route::get('/', function(Request $request) {
      Route::delete('/canvas/{id}', [CanvaController::class, 'deleteCanva']);
      Route::get('/canva/join/{id}', [CanvaController::class, 'joinCanva']);
      Route::post('/canva/like', [CanvaController::class, 'toggleLike']);
-     Route::get('/session', [AuthController::class, 'getSession']);
      Route::post('/user/update', [AuthController::class, 'update']);
 
      // friends
@@ -33,6 +32,7 @@ Route::get('/', function(Request $request) {
      Route::get('/friends/blocked', [FriendController::class, 'getBlockedFriends']);
      Route::get('/friends', [FriendController::class, 'getFriends']);
 });
+Route::get('/session', [AuthController::class, 'getSession']);
 Route::get('/canvas', [CanvaController::class, 'getCanvas']);
 
  // public
