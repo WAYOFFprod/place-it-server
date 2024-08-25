@@ -18,6 +18,7 @@ use Auth;
 use Illuminate\Support\Facades\Http;
 use App\Enums\CanvaVisibility;
 use App\Enums\CanvaAccess;
+use App\Http\Resources\ParticipationResource;
 use Illuminate\Http\Request;
 use Log;
 
@@ -91,10 +92,6 @@ class CanvaController extends Controller
         $canvas = $query->limit(10)->get();
 
         return CanvaResource::collection($canvas);
-    }
-
-    private function filterQuery() {
-
     }
 
     public function createCanva(CreateCanvasRequest $request) {

@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CanvaController;
 use App\Http\Controllers\FriendController;
+use App\Http\Controllers\ParticipationController;
 use Illuminate\Support\Facades\Route;
 
 /**
@@ -21,6 +22,14 @@ Route::get('/', function(Request $request) {
      Route::get('/canva/join/{id}', [CanvaController::class, 'joinCanva']);
      Route::post('/canva/like', [CanvaController::class, 'toggleLike']);
      Route::post('/user/update', [AuthController::class, 'update']);
+
+     // participation
+     Route::get('/canva/{id}/participants', [ParticipationController::class, 'getParticipants']);
+     Route::patch('/participant', [ParticipationController::class, 'patchParticipant']);
+     Route::post('/canva/invite', [ParticipationController::class, 'invite']);
+     Route::post('/canva/request_access', [ParticipationController::class, 'requestAccess']);
+     Route::post('/canva/accept_request', [ParticipationController::class, 'acceptRequest']);
+     Route::post('/canva/reject_request', [ParticipationController::class, 'rejectRequest']);
 
      // friends
      Route::post('/friend/request', [FriendController::class, 'requestFriend']);

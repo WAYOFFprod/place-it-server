@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\CanvaAccess;
 use App\Enums\CanvasRequestType;
 use App\Enums\CanvaVisibility;
+use App\Enums\ParticipationStatus;
 use Auth;
 use DB;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -86,12 +87,18 @@ class Canva extends Model
         ])->first();
     }
 
+    public function acceptParticipation($userId) {
+        $participation = $this->userParticipation($userId);
+        if($participation->status === ParticipationStatus::Invited->value);
+    }
+
     public function user() {
         return $this->belongsTo(User::class);
     }
 
+
     public function participates() {
-        return $this->belongsToMany(User::class, 'participations');
+        return $this->belongsToMany(User::class, 'participations')->withPivot('status');
     }
 
     public function likedBy() {

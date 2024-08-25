@@ -78,14 +78,14 @@ class User extends Authenticatable
     public function friendsTo()
     {
         return $this->belongsToMany(User::class, 'friendships', 'user_id', 'friend_id')
-            ->withPivot(['status', 'user_id'])
+            ->withPivot(['status', 'user_id', 'id'])
             ->withTimestamps();
     }
 
     public function friendsFrom()
     {
         return $this->belongsToMany(User::class, 'friendships', 'friend_id', 'user_id')
-            ->withPivot(['status', 'user_id'])
+            ->withPivot(['status', 'user_id', 'id'])
             ->withTimestamps();
     }
 
