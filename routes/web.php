@@ -21,6 +21,8 @@ Route::get('/', function(Request $request) {
      Route::delete('/canvas/{id}', [CanvaController::class, 'deleteCanva']);
      Route::get('/canva/join/{id}', [CanvaController::class, 'joinCanva']);
      Route::post('/canva/like', [CanvaController::class, 'toggleLike']);
+     Route::post('/canva/update', [CanvaController::class, 'update']);
+
      Route::post('/user/update', [AuthController::class, 'update']);
 
      // participation

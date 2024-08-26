@@ -18,6 +18,7 @@ use Auth;
 use Illuminate\Support\Facades\Http;
 use App\Enums\CanvaVisibility;
 use App\Enums\CanvaAccess;
+use App\Http\Requests\UpdateCanvaRequest;
 use App\Http\Resources\ParticipationResource;
 use Illuminate\Http\Request;
 use Log;
@@ -112,6 +113,29 @@ class CanvaController extends Controller
         $user->participates()->attach($canva->id,['status' => 'accepted']);
 
         $imageCreated = ImageService::createImage($canva->id, $canva->width, $canva->height);
+
+        return new CanvaResource($canva);
+    }
+
+    public function update(UpdateCanvaRequest $request) {
+        $user = Auth::user();
+
+        if(empty($user)) {
+            return response()->json([
+                'message' => "not authorised"
+            ], 403);
+        }
+
+        $canva = $user->canvas->find($request->id);
+
+        if(empty($canva)) {
+            return response()->json([
+                'message' => "not authorised"
+            ], 403);
+        }
+
+        $canva[$request->field] = $request->value;
+        $canva->save();
 
         return new CanvaResource($canva);
     }

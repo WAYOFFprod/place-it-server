@@ -3,10 +3,9 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Fluent;
 use Illuminate\Validation\Rule;
 
-class UpdateUserRequest extends FormRequest
+class UpdateCanvaRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,18 +23,19 @@ class UpdateUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'field' => ['required', Rule::in(['email', 'name', 'discord_user', 'language'])],
+            'id' => ['required', Rule::exists('canvas')],
+            'field' => ['required', Rule::in(['name'])],
             'value' => 'required',
         ];
     }
 
-    public function withValidator($validator) {
-        $validator->sometimes('value', 'required|email', function (Fluent $input) {
-            return $input->field == 'email';
-        });
-        $validator->sometimes('value', [Rule::in(['fr','en'])], function (Fluent $input) {
-            return $input->field == 'language';
-        });
+    // public function withValidator($validator) {
+    //     $validator->sometimes('value', 'required|email', function (Fluent $input) {
+    //         return $input->field == 'email';
+    //     });
+    //     $validator->sometimes('value', [Rule::in(['fr','en'])], function (Fluent $input) {
+    //         return $input->field == 'language';
+    //     });
 
-    }
+    // }
 }
