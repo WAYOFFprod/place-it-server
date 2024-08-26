@@ -3,12 +3,12 @@
 namespace Tests\Browser;
 
 use Artisan;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTruncation;
 use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
+use Illuminate\Support\Str;
 
-class LoginTest extends DuskTestCase
+class AuthTest extends DuskTestCase
 {
     use DatabaseTruncation;
 
@@ -18,13 +18,13 @@ class LoginTest extends DuskTestCase
 
     protected function afterTruncatingDatabase(): void
     {
-        Artisan::call('db:seed');
+        // Artisan::call('db:seed');
     }
 
     /**
-     * A Dusk test example.
+     * A Dusk test for login.
      */
-    public function testExample(): void
+    public function testLogin(): void
     {
         $this->browse(function (Browser $browser) {
             // $client_url = env('DUSK_CLIENT', 'http://place-it.test:5173/');
@@ -50,6 +50,37 @@ class LoginTest extends DuskTestCase
             $browser->waitForText('ADMIN');
             $browser->assertSee('ADMIN');
 
+        });
+    }
+    /**
+     * A Dusk test for registration.
+     */
+    public function testRegistration(): void
+    {
+        $this->browse(function (Browser $browser) {
+            // $client_url = env('DUSK_CLIENT', 'http://place-it.test:5173/');
+            $client_url= 'http://place-it.test:5173/';
+            $username = 'New user 2';
+            $usernameUpper = Str::upper($username);
+
+            // visite homepage
+            $browser->visit($client_url);
+            $browser->waitForText('LOGIN', 1);
+            $browser->assertSee('LOGIN');
+            $browser->press('LOGIN');
+
+
+            // modal login
+            $browser->waitForText('SE CONNECTER', 1);
+            $browser->press('Créer un compte');
+            $browser->value('#name', $username);
+            $browser->value('#email', 'raphael+tester@wayoff.ch');
+            $browser->value('#password', 'Pa$$w0rd');
+            $browser->value('#password_confirmation', 'Pa$$w0rd');
+            $browser->press('S\'enregister');
+
+            $browser->waitForText($usernameUpper, 1);
+            $browser->assertSee($usernameUpper);
         });
     }
 }
