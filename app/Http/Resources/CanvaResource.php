@@ -28,7 +28,7 @@ class CanvaResource extends JsonResource
             $isLiked = $this->likedBy()->where('users.id', $userId)->exists();
             $participation = $this->userParticipation($userId);
         }
-        $status = $participation? $participation->status : null;
+        $status = $participation ? $participation->status : null;
         return [
             "id" => $this->id,
             "name" => $this->name,

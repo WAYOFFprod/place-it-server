@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Canva;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class ResetCanvaSeeder extends Seeder
 {
@@ -13,10 +14,8 @@ class ResetCanvaSeeder extends Seeder
      */
     public function run(): void
     {
-        $canvas = Canva::all();
-        foreach ($canvas as $key => $canva) {
-            $canva->delete();
-        }
+        DB::table('canvas')->truncate();
+        DB::table('participations')->truncate();
 
         $this->call([
             CanvaSeeder::class
