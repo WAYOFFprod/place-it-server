@@ -8,6 +8,7 @@ use App\Http\Requests\RespondFriendRequest;
 use App\Http\Resources\FriendResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Log;
 
 class FriendController extends Controller
 {
@@ -112,7 +113,9 @@ class FriendController extends Controller
 
     // returns requests from others, your own request and accepted friends
     public function getFriends(Request $request) {
+        Log::info('----');
         $user = Auth::user();
+        Log::info(FriendResource::collection($user->friends)->toJson());
         return FriendResource::collection($user->friends);
     }
 }

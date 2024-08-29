@@ -16,12 +16,12 @@ class LogRequest
      */
     public function handle(Request $request, Closure $next): Response
     {
-        Log::info("----- REQUEST -----");
+        // Log::info("----- REQUEST -----");
         // Log::info($request);
 
-        Log::info($request->host());
+        // Log::info($request->host());
         // Log::info($request->httpHost());
-        Log::info($request->cookie('laravel_session'));
+        // Log::info($request->cookie('laravel_session'));
         // Log::info($request->cookie('XSRF-TOKEN'));
 
 

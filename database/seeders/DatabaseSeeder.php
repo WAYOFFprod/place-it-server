@@ -16,7 +16,8 @@ class DatabaseSeeder extends Seeder
         $this->call([
             RoleSeeder::class,
             UserSeeder::class,
-            // CanvaSeeder::class
+            CanvaSeeder::class,
+            FriendSeeder::class
         ]);
     }
 }

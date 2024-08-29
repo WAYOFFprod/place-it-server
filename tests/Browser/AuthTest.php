@@ -23,37 +23,33 @@ class AuthTest extends DuskTestCase
 
     /**
      * A Dusk test for login.
+     * @group Auth
      */
     public function testLogin(): void
     {
         $this->browse(function (Browser $browser) {
             // $client_url = env('DUSK_CLIENT', 'http://place-it.test:5173/');
             $client_url= 'http://place-it.test:5173/';
-            print_r($client_url);
-            // $client_url = "http://localhost:5173/";
             // visite homepage;
-            $browser->visit($client_url);
-            print_r($browser->driver->getCurrentURL());
-            // $browser->waitForText('got here');
-            // $browser->assertSee('got here');
-
-
-            $browser->waitForText('LOGIN', 2);
-            $browser->assertSee('LOGIN');
-            $browser->press('LOGIN');
-            $browser->storeConsoleLog('filename');
-            // modal login
-            $browser->waitForText('SE CONNECTER', 2);
-            $browser->value('#email', 'raphael@wayoff.ch');
-            $browser->value('#password', 'password');
-            $browser->press('Login');
-            $browser->waitForText('ADMIN');
-            $browser->assertSee('ADMIN');
+            $browser->visit($client_url)
+                ->waitForText('LOGIN', 2)
+                ->screenshot('login-1')
+                ->assertSee('LOGIN')
+                ->press('LOGIN')
+                ->waitForText('SE CONNECTER', 2)
+                ->type('email', 'raphael@wayoff.ch')
+                ->type('password', 'password')
+                ->screenshot('login-2-logging-in')
+                ->press('Login')
+                ->waitForText('ADMIN')
+                ->assertSee('ADMIN')
+                ->screenshot('login-3-logged-in');
 
         });
     }
     /**
      * A Dusk test for registration.
+     * @group Auth
      */
     public function testRegistration(): void
     {
@@ -64,23 +60,29 @@ class AuthTest extends DuskTestCase
             $usernameUpper = Str::upper($username);
 
             // visite homepage
-            $browser->visit($client_url);
-            $browser->waitForText('LOGIN', 1);
-            $browser->assertSee('LOGIN');
-            $browser->press('LOGIN');
+            $browser
+                ->visit($client_url)
+                ->waitForText('LOGIN', 1)
+                ->assertSee('LOGIN')
+                ->press('LOGIN')
+                ->waitForText('SE CONNECTER', 1)
+                ->screenshot('register-1');
 
 
             // modal login
-            $browser->waitForText('SE CONNECTER', 1);
-            $browser->press('Créer un compte');
-            $browser->value('#name', $username);
-            $browser->value('#email', 'raphael+tester@wayoff.ch');
-            $browser->value('#password', 'Pa$$w0rd');
-            $browser->value('#password_confirmation', 'Pa$$w0rd');
-            $browser->press('S\'enregister');
+            $browser
+                ->press('Créer un compte')
+                ->value('#name', $username)
+                ->value('#email', 'raphael+tester@wayoff.ch')
+                ->value('#password', 'Pa$$w0rd')
+                ->value('#password_confirmation', 'Pa$$w0rd')
+                ->screenshot('register-2-create-account')
+                ->press('S\'enregister');
 
-            $browser->waitForText($usernameUpper, 1);
-            $browser->assertSee($usernameUpper);
+            $browser
+                ->waitForText($usernameUpper, 1)
+                ->assertSee($usernameUpper)
+                ->screenshot('register-3-complete');
         });
     }
 }
