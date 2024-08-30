@@ -76,51 +76,53 @@ class DashboardTest extends DuskTestCase
      */
     public function testAddParticipant(): void
     {
-        $this->browse(function (Browser $browser) {
+        $this->browse(function (Browser $browser, Browser $browser2) {
             $client_url= 'http://place-it.test:5173/';
             $user = User::find(1);
+            $user2 = User::find(2);
+
 
             // authenticate
             $browser->visit($client_url)
-                ->waitForText('LOGIN', 2)
-                ->assertSee('LOGIN')
-                ->press('LOGIN')
-                ->waitForText('SE CONNECTER', 2)
-                ->value('#email', 'raphael@wayoff.ch')
-                ->value('#password', 'password')
-                ->press('Login')
-                ->waitForText('ADMIN', 2)
-                ->assertSee('ADMIN');
+                ->loginSvelteAs($user)
+                ->screenshot('loggedin-1');
+
+            $browser->waitUsing(10, 1, function () use ($browser2, $client_url, $user2) {
+                return $browser2->visit($client_url)
+                    ->loginSvelteAs($user2)
+                    ->screenshot('loggedin-2');
+            }, "second user couldn't login");
 
             $canvaId = $user->canvas->first()->id;
-            // click owned canva
-            $username = "User 1";
-            $browser
-                ->waitFor('#canva-preview-'.$canvaId, 2)
-                ->mouseover('#canva-preview-'.$canvaId)
-                ->waitForText('Modifier', 2)
-                ->click('#button-modify')
-                ->waitForText('MODIFIER LE CANVA', 1)
-                ->screenshot('adding-participant-1')
-                ->click('#button-add-participant')
-                ->waitFor('#friends', 2)
-                ->typeSlowly('friends', "user")
-                // ->click('#friends')
-                ->waitForText($username, 2)
-                ->screenshot('adding-participant-2-adding')
-                ->click('#option-2');
 
-            $inputValue = $browser->inputValue('friends');
+            $browser2->waitUsing(10, 1, function () use ($browser, $canvaId, $user2) {
+                $browser
+                    ->waitFor('#canva-preview-'.$canvaId, 2)
+                    ->mouseover('#canva-preview-'.$canvaId)
+                    ->waitForText('Modifier', 2)
+                    ->click('#button-modify')
+                    ->waitForText('MODIFIER LE CANVA', 1)
+                    ->screenshot('adding-participant-1')
+                    ->click('#button-add-participant')
+                    ->waitFor('#friends', 2)
+                    ->typeSlowly('friends', "user")
+                    // ->click('#friends')
+                    ->waitForText($user2->name, 2)
+                    ->screenshot('adding-participant-2-adding')
+                    ->click('#option-2');
 
-            $this->assertTrue($inputValue == $username);
+                    $inputValue = $browser->inputValue('friends');
 
-            $browser->click('#button-see-participant-list')
-                ->waitForText($username, 2)
-                ->screenshot('adding-participant-3-added')
-                ->assertSee($username);
-                //
+                    $this->assertTrue($inputValue == $user2->name);
 
-            // $browser->storeConsoleLog('filename');
+                    return $browser->click('#button-see-participant-list')
+                        ->waitForText($user2->name, 2)
+                        ->screenshot('adding-participant-3-added')
+                        ->assertSee($user2->name);
+            }, "could not wait for first browser to add user");
+
+            $browser2->click('#button-community-cavans')
+                ->waitFor('#canva-preview-1', 2);
         });
     }
 
