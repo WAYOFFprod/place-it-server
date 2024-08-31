@@ -38,6 +38,8 @@ Route::get('/', function(Request $request) {
      Route::post('/friend/accept', [FriendController::class, 'acceptFriend']);
      Route::post('/friend/reject', [FriendController::class, 'rejectFriend']);
      Route::post('/friend/block', [FriendController::class, 'blockFriend']);
+     Route::delete('/friend/{id}/unblock', [FriendController::class, 'unblockAccount']);
+     Route::delete('/friend/{id}/remove', [FriendController::class, 'removeFriend']);
 
      Route::get('/friends/requests', [FriendController::class, 'getRequests']);
      Route::get('/friends/blocked', [FriendController::class, 'getBlockedFriends']);

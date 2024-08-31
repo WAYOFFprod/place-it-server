@@ -100,6 +100,21 @@ class FriendController extends Controller
         return new FriendResource($friend);
     }
 
+    public function removeFriend(Request $request, $id) {
+        $user = Auth::user();
+        $hasDetached = $user->notBlockedFriendsTo()->detach($id);
+        if(!$hasDetached) {
+            $hasDetached = $user->notBlockedFriendsFrom()->detach($id);
+        }
+        return $hasDetached;
+    }
+
+    public function unblockAccount(Request $request, $id) {
+        $user = Auth::user();
+        $hasDetached = $user->blockedFriendsTo()->detach($id);
+        return $hasDetached;
+    }
+
     public function getBlockedFriends(Request $request) {
         $user = Auth::user();
         return FriendResource::collection($user->blockedFriendsTo);
