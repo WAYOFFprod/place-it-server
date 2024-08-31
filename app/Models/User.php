@@ -56,6 +56,10 @@ class User extends Authenticatable
         return $this->hasMany(Canva::class);
     }
 
+    public function notificationSettings() {
+        return $this->hasOne(NotificationSetting::class);
+    }
+
     public function participates() {
         return $this->belongsToMany(Canva::class, 'participations');
     }

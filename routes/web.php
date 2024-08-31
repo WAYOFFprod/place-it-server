@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CanvaController;
 use App\Http\Controllers\FriendController;
+use App\Http\Controllers\NotificationSettingsController;
 use App\Http\Controllers\ParticipationController;
 use Illuminate\Support\Facades\Route;
 
@@ -44,7 +45,10 @@ Route::get('/', function(Request $request) {
      Route::get('/friends/requests', [FriendController::class, 'getRequests']);
      Route::get('/friends/blocked', [FriendController::class, 'getBlockedFriends']);
      Route::get('/friends', [FriendController::class, 'getFriends']);
-});
+
+     Route::get('/settings/notifications', [NotificationSettingsController::class, 'get']);
+     Route::patch('/settings/update', [NotificationSettingsController::class, 'updateField']);
+    });
 Route::get('/session', [AuthController::class, 'getSession']);
 Route::get('/canvas', [CanvaController::class, 'getCanvas']);
 
