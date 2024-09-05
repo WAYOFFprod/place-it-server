@@ -121,7 +121,7 @@ class DashboardTest extends DuskTestCase
                         ->assertSee($user2->name);
             }, "could not wait for first browser to add user");
 
-            $browser2->click('#button-community-cavans')
+            $browser2->click('#button-community-canvas')
                 ->waitFor('#canva-preview-1', 2);
         });
     }
