@@ -209,6 +209,7 @@ class CanvaController extends Controller
         $canva = Canva::findOrFail($request->id);
         $canva->live_player_count = $request->playerCount;
         $canva->save();
+        return response()->json(201);
     }
 
     public function placePixel(PlacePixelsRequest $request) {
@@ -225,6 +226,7 @@ class CanvaController extends Controller
                 return false;
             }
         );
+
         $colors = array_unique($validPixels);
 
         ImageService::updateImage($validPixels, $colors, $request->id);
