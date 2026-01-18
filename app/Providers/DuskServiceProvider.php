@@ -4,8 +4,8 @@ namespace App\Providers;
 
 use App\Models\User;
 use Illuminate\Support\ServiceProvider;
-use Laravel\Dusk\Browser;
 use Illuminate\Support\Str;
+use Laravel\Dusk\Browser;
 
 class DuskServiceProvider extends ServiceProvider
 {
@@ -22,7 +22,7 @@ class DuskServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Browser::macro('loginSvelteAs', function(User $user) {
+        Browser::macro('loginSvelteAs', function (User $user) {
             $this->waitForText('LOGIN', 2)
                 ->assertSee('LOGIN')
                 ->press('LOGIN')
