@@ -1,6 +1,8 @@
 <?php
 namespace App\Services;
 
+use Log;
+
 class ImageService {
     public static function getBase64Image($id) : string
     {
@@ -56,6 +58,8 @@ class ImageService {
             );
             if($colorId) {
                 $colorIds[$colorId] = $rgb;
+            } else {
+                Log::info("Color not added: ".$color. " : ".$colorId);
             }
         }
         return $colorIds;
@@ -80,7 +84,8 @@ class ImageService {
         $image = imagecreatefrompng($path);
         $width = $size[0];
 
-        $colorsIds = self::prepColors($image, $pixels, $colors);
+        $colorsIds = self::prepColors($image, $colors);
+        Log::info($colorsIds);
         foreach ($pixels as $i => $color) {
             $x = $i % $width;
             $y = (int)floor((int)$i / $width);
@@ -91,6 +96,8 @@ class ImageService {
                 $y,
                 $colorsIds[$color]
             );
+            Log::info($color);
+            Log::info($colorsIds[$color]);
         }
         $isImageSaved = imagepng(
             $image,
@@ -98,7 +105,8 @@ class ImageService {
         );
     }
 
-    static function prepColors($image, array $pixels, array $colors) {
+    // TODO: There seems to be an issue when having too many colors, need to figure out how to dealocate colors if necessary
+    static function prepColors($image, array $colors) {
         $colorIds = [];
         foreach ($colors as $key => $color) {
             $rgb = self::hexToRgb($color);
@@ -108,8 +116,13 @@ class ImageService {
                 $rgb['g'],
                 $rgb['b']
             );
-            $colorIds[$color] = $colorId;
+            if($colorId) {
+                $colorIds[$color] = $colorId;
+            } else {
+                Log::info("Color not added: ".$color. " : ".$colorId);
+            }
         }
+
         return $colorIds;
     }
 

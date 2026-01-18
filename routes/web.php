@@ -49,6 +49,7 @@ Route::get('/', function(Request $request) {
      Route::get('/settings/notifications', [NotificationSettingsController::class, 'get']);
      Route::patch('/settings/update', [NotificationSettingsController::class, 'updateField']);
     });
+    
 Route::get('/session', [AuthController::class, 'getSession']);
 Route::get('/canvas', [CanvaController::class, 'getCanvas']);
 
