@@ -32,11 +32,18 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Copy application files
 COPY . /var/www/html
 
-# Install application dependencies
-RUN composer install --no-dev --optimize-autoloader --no-interaction
+# Clear bootstrap cache files that may reference dev dependencies
+RUN rm -rf bootstrap/cache/*.php
+
+# Install application dependencies with APP_ENV=production to skip dev providers
+RUN APP_ENV=production composer install --no-dev --optimize-autoloader --no-interaction --no-scripts && \
+  APP_ENV=production composer dump-autoload --optimize --no-dev --classmap-authoritative && \
+  composer clear-cache
 
 # Set permissions
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache && \
+  mkdir -p /var/log/supervisor && \
+  chmod -R 755 /var/log/supervisor
 
 # Copy nginx configuration
 COPY Docker/nginx.conf /etc/nginx/http.d/default.conf
