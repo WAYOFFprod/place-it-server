@@ -58,8 +58,8 @@ RUN echo "pm = dynamic" >> /usr/local/etc/php-fpm.d/www.conf && \
 # Copy supervisor configuration
 COPY Docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-# Expose port 80
-EXPOSE 80
+# Expose port 8080
+EXPOSE 8080
 
 # Start supervisor
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
