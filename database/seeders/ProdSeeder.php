@@ -7,7 +7,7 @@ namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
-class DatabaseSeeder extends Seeder
+class ProdSeeder extends Seeder
 {
     /**
      * Seed the application's database.
@@ -22,7 +22,7 @@ class DatabaseSeeder extends Seeder
         $admin = User::create([
             'name' => 'admin',
             'email' => 'raphael@wayoff.ch',
-            'password' => 'securepassword',
+            'password' => bcrypt('password'),
             'language' => 'en',
         ]);
 
