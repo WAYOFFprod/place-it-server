@@ -14,8 +14,10 @@ use App\Http\Requests\ToggleLikeCanvaRequest;
 use App\Http\Requests\UpdateCanvaRequest;
 use App\Http\Resources\CanvaResource;
 use App\Models\Canva;
+use App\Models\User;
 use App\Services\ImageService;
 use Auth;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Log;
 
@@ -55,33 +57,10 @@ class CanvaController extends Controller
         $query = null;
         switch ($request->scope) {
             case CanvasRequestType::Community->value:
-                $query = Canva::query()->orderBy('updated_at', 'desc')->community();
-                if ($request->favorit) {
-                    $query->favorit();
-                }
-                if ($request->sort) {
-                    $query->orderBy('updated_at', $request->sort);
-                }
-                if ($request->search) {
-                    $query->where('name', 'LIKE', '%'.$request->search.'%');
-                }
+                $query = $this->getCommunityCanvas($user, $request);
                 break;
             case CanvasRequestType::Personal->value:
-                if (! empty($user)) {
-                    $query = Canva::query()->orderBy('updated_at', 'desc')->where('user_id', $user->id);
-                    if ($request->favorit) {
-                        $query->favorit();
-                    }
-                    if ($request->sort) {
-                        $query->orderBy('updated_at', $request->sort);
-                    }
-                    if ($request->search) {
-                        $query->where('name', 'LIKE', '%'.$request->search.'%');
-                    }
-                    $canvas = $query->limit(10)->get();
-                } else {
-                    $query = Canva::query()->orderBy('updated_at', 'desc')->where('user_id', null);
-                }
+                $query = $this->getPersonalCanvas($user, $request);
                 break;
 
             default:
@@ -92,6 +71,42 @@ class CanvaController extends Controller
         $canvas = $query->limit(10)->get();
 
         return CanvaResource::collection($canvas);
+    }
+
+    private function getCommunityCanvas(?User $user, Request $request): Builder
+    {
+        $query = Canva::query()->orderBy('updated_at', 'desc')->community();
+        if ($request->favorit) {
+            $query->favorit();
+        }
+        if ($request->sort) {
+            $query->orderBy('updated_at', $request->sort);
+        }
+        if ($request->search) {
+            $query->where('name', 'LIKE', '%'.$request->search.'%');
+        }
+
+        return $query;
+    }
+
+    private function getPersonalCanvas(?User $user, Request $request): Builder
+    {
+        // if authenticated
+        $query = Canva::query();
+        if (! empty($user)) {
+            $query = Canva::query()->orderBy('updated_at', 'desc')->where('user_id', $user->id);
+            if ($request->favorit) {
+                $query->favorit();
+            }
+            if ($request->sort) {
+                $query->orderBy('updated_at', $request->sort);
+            }
+            if ($request->search) {
+                $query->where('name', 'LIKE', '%'.$request->search.'%');
+            }
+        }
+
+        return $query;
     }
 
     public function createCanva(CreateCanvasRequest $request)
