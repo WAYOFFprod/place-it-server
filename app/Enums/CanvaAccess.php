@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Enums;
 
 enum CanvaAccess: string

@@ -32,7 +32,7 @@ class CreateCanvasRequest extends FormRequest
             'colors' => 'required',
             'access' => ['required', Rule::enum(CanvaAccess::class)],
             'visibility' => ['required', Rule::enum(CanvaVisibility::class)],
-            'category' => ['exclude_if:visibility,private','required', Rule::enum(CanvaCategory::class)],
+            'category' => ['exclude_if:visibility,private', 'required', Rule::enum(CanvaCategory::class)],
         ];
     }
 }

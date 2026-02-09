@@ -23,7 +23,7 @@ class PlacePixelsRequest extends FormRequest
     {
         return [
             'id' => 'required|integer',
-            'pixels' => 'required|array'
+            'pixels' => 'required|array',
         ];
     }
 }

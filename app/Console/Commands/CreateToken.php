@@ -4,8 +4,8 @@ namespace App\Console\Commands;
 
 use App\Models\User;
 use Hash;
-use Str;
 use Illuminate\Console\Command;
+use Str;
 
 class CreateToken extends Command
 {
@@ -29,13 +29,13 @@ class CreateToken extends Command
      */
     public function handle()
     {
-        $user = User::where('email', "liveserver@wayoff.tv")->first();
+        $user = User::where('email', 'liveserver@wayoff.tv')->first();
         $user = $user ?: User::create([
             'email' => 'liveserver@wayoff.tv',
             'name' => 'Live Server',
-            'password' => Hash::make(Str::random(40))
+            'password' => Hash::make(Str::random(40)),
         ]);
         $token = $user->createToken('liveserver', ['canvas:place-pixels']);
-        $this->line("token: ".$token->plainTextToken);
+        $this->line('token: '.$token->plainTextToken);
     }
 }

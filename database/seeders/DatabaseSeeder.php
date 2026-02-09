@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             UserSeeder::class,
             CanvaSeeder::class,
-            FriendSeeder::class
+            FriendSeeder::class,
         ]);
     }
 }

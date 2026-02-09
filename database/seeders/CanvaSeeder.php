@@ -5,30 +5,28 @@ namespace Database\Seeders;
 use App\Models\Canva;
 use App\Models\User;
 use App\Services\ImageService;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class CanvaSeeder extends Seeder
 {
-
     private $accessTypes = [
         'open',
         'request_only',
-        'closed'
+        'closed',
     ];
 
     private $types = [
         'pixelwar',
         'artistic',
-        'free'
+        'free',
     ];
+
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
         $users = User::all();
-
 
         foreach ($users as $key => $user) {
             $this->shiftArrays();
@@ -41,7 +39,8 @@ class CanvaSeeder extends Seeder
         }
     }
 
-    private function createCanvaForUser($user) {
+    private function createCanvaForUser($user)
+    {
         $canvas = Canva::factory()
             ->count(3)
             ->sequence(
@@ -67,13 +66,14 @@ class CanvaSeeder extends Seeder
             ->create();
 
         foreach ($canvas as $key => $canva) {
-            $user->participates()->attach($canva->id,['status' => 'accepted']);
+            $user->participates()->attach($canva->id, ['status' => 'accepted']);
             $imageCreated = ImageService::createImage($canva->id, $canva->width, $canva->height);
         }
         $user->canvas()->saveMany($canvas);
     }
 
-    private function createPublicCanvas($user) {
+    private function createPublicCanvas($user)
+    {
         $canvas = Canva::factory()
             ->count(3)
             ->sequence(
@@ -94,21 +94,23 @@ class CanvaSeeder extends Seeder
             ->create();
 
         foreach ($canvas as $key => $canva) {
-            $user->participates()->attach($canva->id,['status' => 'accepted']);
+            $user->participates()->attach($canva->id, ['status' => 'accepted']);
             $imageCreated = ImageService::createImage($canva->id, $canva->width, $canva->height);
         }
         $user->canvas()->saveMany($canvas);
     }
 
-    private function participateInHalfCanvas(User $user) {
+    private function participateInHalfCanvas(User $user)
+    {
         $canvas = Canva::community()->get();
-        for ($i=0; $i < round($canvas->count() / 2); $i++) {
+        for ($i = 0; $i < round($canvas->count() / 2); $i++) {
             $canva = $canvas->random();
             $user->participates()->attach($canva->id, ['status' => 'accepted']);
         }
     }
 
-    private function shiftArrays() {
+    private function shiftArrays()
+    {
         $type = array_shift($this->types);
         $this->types[] = $type;
 

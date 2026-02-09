@@ -38,6 +38,7 @@ class CreateNewUser implements CreatesNewUsers
         ]);
 
         $user->syncRoles(['user']);
+
         return $user;
     }
 }

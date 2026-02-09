@@ -111,9 +111,10 @@ class CanvaController extends Controller
 
     public function createCanva(CreateCanvasRequest $request)
     {
-
+        /** @var User $user */
         $user = Auth::user();
 
+        /** @var Canva $canva */
         $canva = $user->canvas()->create([
             'name' => $request->name,
             'category' => $request->category,
@@ -134,6 +135,7 @@ class CanvaController extends Controller
 
     public function update(UpdateCanvaRequest $request)
     {
+        /** @var User| null $user */
         $user = Auth::user();
 
         if (empty($user)) {
@@ -164,7 +166,7 @@ class CanvaController extends Controller
         if (empty($canva)) {
             return response()->json([
                 'message' => 'nothing to see here',
-                'id' => $canva->id,
+                'id' => $id,
             ], 403);
         }
         $accessStatus = $canva->requestAccess($user);
@@ -241,7 +243,8 @@ class CanvaController extends Controller
         Log::info('Place pixel request received for canvas '.$request->id.' with '.count($request->pixels).' pixels.');
         $canva = Canva::findOrFail($request->id);
 
-        $availableColors = [...$canva->colors, '#ffffff'];
+        $canvaColors = is_array($canva->colors) ? $canva->colors : json_decode($canva->colors, true);
+        $availableColors = [...$canvaColors, '#ffffff'];
 
         $validPixels = array_filter(
             $request->pixels,
