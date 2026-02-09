@@ -7,6 +7,8 @@ namespace App\Models;
 use App\Enums\FriendRequestStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -54,22 +56,22 @@ class User extends Authenticatable
         ];
     }
 
-    public function canvas()
+    public function canvas(): HasMany
     {
         return $this->hasMany(Canva::class);
     }
 
-    public function notificationSettings()
+    public function notificationSettings(): HasOne
     {
         return $this->hasOne(NotificationSetting::class);
     }
 
-    public function participates()
+    public function participates(): BelongsToMany
     {
-        return $this->belongsToMany(Canva::class, 'participations');
+        return $this->belongsToMany(Canva::class, 'participations')->using(ParticipationPivot::class);
     }
 
-    public function toggleLikeCanvas($canvaId)
+    public function toggleLikeCanvas(int $canvaId): bool
     {
         $isLiked = $this->likedCanvas()->where('canvas.id', $canvaId)->exists();
         if ($isLiked) {

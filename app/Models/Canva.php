@@ -27,6 +27,7 @@ class Canva extends Model
 
     public function scopeFavorit(Builder $query)
     {
+        /** @var User $user */
         $user = Auth::user();
         if ($user) {
             $id = $user->id;

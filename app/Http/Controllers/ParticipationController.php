@@ -17,6 +17,8 @@ class ParticipationController extends Controller
     public function invite(AddParticipantRequest $request)
     {
         $user = Auth::user();
+
+        /** @var Canva $canva */
         $canva = $user->canvas()->findOrFail($request->canva_id);
 
         return $canva->participates()->attach($request->user_id, [
@@ -29,7 +31,9 @@ class ParticipationController extends Controller
         //TODO: check canva type to see if it allows requests
         $user = Auth::user();
 
+        /** @var Canva $canva */
         $canva = Canva::find($request->canva_id);
+
         if ($canva->access == CanvaAccess::RequestOnly->value) {
             return $canva->participates()->attach($user->id, [
                 'status' => ParticipationStatus::Invited->value,
@@ -44,6 +48,7 @@ class ParticipationController extends Controller
     public function acceptRequest(AddParticipantRequest $request)
     {
         $user = Auth::user();
+        /** @var Canva $canva */
         $canva = $user->canvas()->findOrFail($request->canva_id);
 
         $participationQuery = $canva->participates()->where('user_id', $request->user_id);
@@ -83,6 +88,7 @@ class ParticipationController extends Controller
     public function rejectRequest(AddParticipantRequest $request)
     {
         $user = Auth::user();
+        /** @var Canva $canva */
         $canva = $user->canvas()->findOrFail($request->canva_id);
 
         $participationQuery = $canva->participates()->where('user_id', $request->user_id);
@@ -110,6 +116,7 @@ class ParticipationController extends Controller
     public function getParticipants(Request $request, $id)
     {
         $user = Auth::user();
+        /** @var Canva $canva */
         $canva = $user->canvas()->findOrFail($id);
 
         return ParticipationResource::collection($canva->participates()->get()->except($user->id));
@@ -119,6 +126,7 @@ class ParticipationController extends Controller
     {
         $status = $request->status;
         // $user = Auth::user();
+        /** @var Canva $canva */
         $canva = Canva::find($request->canva_id);
         $canva->participates()->updateExistingPivot($request->user_id, [
             'status' => $status,

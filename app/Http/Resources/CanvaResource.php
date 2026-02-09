@@ -2,12 +2,28 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Canva;
 use App\Services\ImageService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 
+/**
+ * @property int $id
+ * @property string $name
+ * @property int $width
+ * @property int $height
+ * @property string $colors
+ * @property int $user_id
+ * @property string $category
+ * @property string $access
+ * @property string $visibility
+ * @property int $live_player_count
+ * @property \Illuminate\Support\Carbon $created_at
+ *
+ * @mixin Canva
+ */
 class CanvaResource extends JsonResource
 {
     /**
