@@ -18,7 +18,7 @@ class RoleSeeder extends Seeder
         $editAllCanvaPerission = Permission::create(['name' => 'edit-all-canvas']);
 
         $adminRole->syncPermissions([
-            $editAllCanvaPerission
+            $editAllCanvaPerission,
         ]);
 
         // user
@@ -28,10 +28,8 @@ class RoleSeeder extends Seeder
 
         $userRole->syncPermissions([
             $createCanvaPerission,
-            $editOwnCanvaPerission
+            $editOwnCanvaPerission,
         ]);
-
-
 
     }
 }

@@ -17,7 +17,7 @@ class ParticipationResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'status' => $this->pivot->status
+            'status' => $this->pivot->status,
         ];
     }
 }

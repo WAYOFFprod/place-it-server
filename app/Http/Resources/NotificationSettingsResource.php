@@ -18,7 +18,7 @@ class NotificationSettingsResource extends JsonResource
             'friend_request' => $this->friend_request,
             'accepted_friend_request' => $this->accepted_friend_request,
             'canva_request' => $this->canva_request,
-            'accepted_canva_request' => $this->accepted_canva_request
+            'accepted_canva_request' => $this->accepted_canva_request,
         ];
     }
 }

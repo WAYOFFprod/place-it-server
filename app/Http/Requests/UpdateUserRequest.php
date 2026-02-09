@@ -29,11 +29,12 @@ class UpdateUserRequest extends FormRequest
         ];
     }
 
-    public function withValidator($validator) {
+    public function withValidator($validator)
+    {
         $validator->sometimes('value', 'required|email', function (Fluent $input) {
             return $input->field == 'email';
         });
-        $validator->sometimes('value', [Rule::in(['fr','en'])], function (Fluent $input) {
+        $validator->sometimes('value', [Rule::in(['fr', 'en'])], function (Fluent $input) {
             return $input->field == 'language';
         });
 
