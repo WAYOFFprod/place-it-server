@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('name');
             $table->integer('width');
             $table->integer('height');
-            $table->enum('category', ['pixelwar', 'artistic', 'free'])->nullable();
+            $table->enum('category', ["pixelwar", "artistic", "free"])->nullable();
             $table->enum('access', ['open', 'invite_only', 'request_only', 'closed'])->nullable();
             $table->enum('visibility', ['public', 'friends_only', 'private']);
             $table->json('colors')->nullable();

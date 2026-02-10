@@ -26,7 +26,7 @@ class UpdateParticipantRequest extends FormRequest
         return [
             'user_id' => 'required|exists:users,id',
             'canva_id' => 'required|exists:canvas,id',
-            'status' => ['required', Rule::enum(ParticipationStatus::class)],
+            'status' => ['required', Rule::enum(ParticipationStatus::class)]
         ];
     }
 }

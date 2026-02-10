@@ -23,7 +23,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
             'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
         ]);
-        if (env('APP_ENV') == 'local') {
+        if(env('APP_ENV') == 'local') {
             $middleware->group('web', [
                 LogRequest::class,
                 \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,

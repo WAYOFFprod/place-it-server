@@ -4,18 +4,16 @@ namespace Tests\Browser;
 
 use Artisan;
 use Illuminate\Foundation\Testing\DatabaseTruncation;
-use Illuminate\Support\Str;
 use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
+use Illuminate\Support\Str;
 
 class AuthTest extends DuskTestCase
 {
     use DatabaseTruncation;
 
     protected $dropViews = true;
-
     protected $seed = true;
-
     protected $exceptTables = ['personal_access_tokens'];
 
     protected function afterTruncatingDatabase(): void
@@ -25,14 +23,13 @@ class AuthTest extends DuskTestCase
 
     /**
      * A Dusk test for login.
-     *
      * @group Auth
      */
     public function testLogin(): void
     {
         $this->browse(function (Browser $browser) {
             // $client_url = env('DUSK_CLIENT', 'http://place-it.test:5173/');
-            $client_url = 'http://place-it.test:5173/';
+            $client_url= 'http://place-it.test:5173/';
             // visite homepage;
             $browser->visit($client_url)
                 ->waitForText('LOGIN', 2)
@@ -50,17 +47,15 @@ class AuthTest extends DuskTestCase
 
         });
     }
-
     /**
      * A Dusk test for registration.
-     *
      * @group Auth
      */
     public function testRegistration(): void
     {
         $this->browse(function (Browser $browser) {
             // $client_url = env('DUSK_CLIENT', 'http://place-it.test:5173/');
-            $client_url = 'http://place-it.test:5173/';
+            $client_url= 'http://place-it.test:5173/';
             $username = 'New user 2';
             $usernameUpper = Str::upper($username);
 
@@ -72,6 +67,7 @@ class AuthTest extends DuskTestCase
                 ->press('LOGIN')
                 ->waitForText('SE CONNECTER', 1)
                 ->screenshot('register-1');
+
 
             // modal login
             $browser

@@ -2,17 +2,9 @@
 
 namespace App\Http\Resources;
 
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-/**
- * @property int $id
- * @property string $name
- * @property object $pivot
- *
- * @mixin User
- */
 class FriendResource extends JsonResource
 {
     /**

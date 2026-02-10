@@ -9,28 +9,25 @@ use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
-    public function getSession(Request $request)
-    {
+    public  function getSession(Request $request){
         $user = Auth::user();
-        if (empty($user)) {
+        if(empty($user)) {
             return response()->json([
                 'isConnected' => false,
             ], 200);
         }
-
         return response()->json([
             'isConnected' => true,
             'user' => new UserResource($user),
         ], 200);
     }
 
-    public function update(UpdateUserRequest $request)
-    {
+    public function update(UpdateUserRequest $request) {
         $user = Auth::user();
 
-        if (empty($user)) {
+        if(empty($user)) {
             return response()->json([
-                'message' => 'not authorised',
+                'message' => "not authorised"
             ], 403);
         }
 
@@ -40,4 +37,6 @@ class AuthController extends Controller
         return new UserResource($user);
 
     }
+
+
 }

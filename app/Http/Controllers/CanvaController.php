@@ -9,58 +9,80 @@ use App\Http\Requests\DeleteCanvaRequest;
 use App\Http\Requests\GetCanvaRequest;
 use App\Http\Requests\GetCanvasRequest;
 use App\Http\Requests\JoinCanvaRequest;
+use App\Http\Resources\CanvaResource;
 use App\Http\Requests\PlacePixelsRequest;
 use App\Http\Requests\ToggleLikeCanvaRequest;
-use App\Http\Requests\UpdateCanvaRequest;
-use App\Http\Resources\CanvaResource;
 use App\Models\Canva;
-use App\Models\User;
 use App\Services\ImageService;
 use Auth;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Http;
+use App\Enums\CanvaVisibility;
+use App\Enums\CanvaAccess;
+use App\Http\Requests\UpdateCanvaRequest;
+use App\Http\Resources\ParticipationResource;
 use Illuminate\Http\Request;
 use Log;
 
 class CanvaController extends Controller
 {
-    public function getCanva(GetCanvaRequest $request, $id)
-    {
+    public function getCanva(GetCanvaRequest $request, $id) {
         $canva = Canva::find($id);
-        if (empty($canva)) {
+        if(empty($canva)) {
             return response()->json([
                 'message' => 'canva does not exist',
-                'status' => 404,
+                'status' => 404
             ], 404);
         }
         $user = Auth::user();
 
         // TODO: canva if accesible or owned
 
-        if (empty($user)) {
+        if(empty($user)) {
             return new CanvaResource($canva);
         }
 
         // TODO: check if user has write permission
         $canEdit = true;
-        if ($canEdit) {
+        if($canEdit) {
 
             return new CanvaResource($canva);
         }
 
         return new CanvaResource($canva);
     }
-
-    public function getCanvas(GetCanvasRequest $request)
-    {
+    public function getCanvas(GetCanvasRequest $request) {
         $user = Auth::user();
         $canvas = [];
         $query = null;
         switch ($request->scope) {
             case CanvasRequestType::Community->value:
-                $query = $this->getCommunityCanvas($user, $request);
+                $query = Canva::query()->community();
+                if($request->favorit) {
+                    $query->favorit();
+                }
+                if($request->sort) {
+                    $query->orderBy('updated_at', $request->sort);
+                }
+                if($request->search) {
+                    $query->where('name', 'LIKE', '%'.$request->search.'%');
+                }
                 break;
             case CanvasRequestType::Personal->value:
-                $query = $this->getPersonalCanvas($user, $request);
+                if(!empty($user)) {
+                    $query = Canva::query()->where('user_id', $user->id);
+                    if($request->favorit) {
+                        $query->favorit();
+                    }
+                    if($request->sort) {
+                        $query->orderBy('updated_at', $request->sort);
+                    }
+                    if($request->search) {
+                        $query->where('name', 'LIKE', '%'.$request->search.'%');
+                    }
+                    $canvas = $query->limit(10)->get();
+                } else {
+                    $query = Canva::query()->where('user_id', null);
+                }
                 break;
 
             default:
@@ -73,82 +95,42 @@ class CanvaController extends Controller
         return CanvaResource::collection($canvas);
     }
 
-    private function getCommunityCanvas(?User $user, Request $request): Builder
-    {
-        $query = Canva::query()->orderBy('updated_at', 'desc')->community();
-        if ($request->favorit) {
-            $query->favorit();
-        }
-        if ($request->sort) {
-            $query->orderBy('updated_at', $request->sort);
-        }
-        if ($request->search) {
-            $query->where('name', 'LIKE', '%'.$request->search.'%');
-        }
+    public function createCanva(CreateCanvasRequest $request) {
 
-        return $query;
-    }
-
-    private function getPersonalCanvas(?User $user, Request $request): Builder
-    {
-        // if authenticated
-        $query = Canva::query();
-        if (! empty($user)) {
-            $query = Canva::query()->orderBy('updated_at', 'desc')->where('user_id', $user->id);
-            if ($request->favorit) {
-                $query->favorit();
-            }
-            if ($request->sort) {
-                $query->orderBy('updated_at', $request->sort);
-            }
-            if ($request->search) {
-                $query->where('name', 'LIKE', '%'.$request->search.'%');
-            }
-        }
-
-        return $query;
-    }
-
-    public function createCanva(CreateCanvasRequest $request)
-    {
-        /** @var User $user */
         $user = Auth::user();
 
-        /** @var Canva $canva */
         $canva = $user->canvas()->create([
-            'name' => $request->name,
-            'category' => $request->category,
-            'access' => $request->access,
-            'visibility' => $request->visibility,
-            'width' => $request->width,
-            'height' => $request->height,
-            'colors' => $request->colors,
+            "name" => $request->name,
+            "category" => $request->category,
+            "access" => $request->access,
+            "visibility" => $request->visibility,
+            "width" => $request->width,
+            "height" => $request->height,
+            "colors" => $request->colors,
             'live_player_count' => 0,
         ]);
 
-        $user->participates()->attach($canva->id, ['status' => 'accepted']);
+        $user->participates()->attach($canva->id,['status' => 'accepted']);
 
         $imageCreated = ImageService::createImage($canva->id, $canva->width, $canva->height);
 
         return new CanvaResource($canva);
     }
 
-    public function update(UpdateCanvaRequest $request)
-    {
-        /** @var User| null $user */
+    public function update(UpdateCanvaRequest $request) {
         $user = Auth::user();
 
-        if (empty($user)) {
+        if(empty($user)) {
             return response()->json([
-                'message' => 'not authorised',
+                'message' => "not authorised"
             ], 403);
         }
 
         $canva = $user->canvas->find($request->id);
 
-        if (empty($canva)) {
+        if(empty($canva)) {
             return response()->json([
-                'message' => 'not authorised',
+                'message' => "not authorised"
             ], 403);
         }
 
@@ -158,46 +140,42 @@ class CanvaController extends Controller
         return new CanvaResource($canva);
     }
 
-    public function joinCanva(JoinCanvaRequest $request, $id)
-    {
+    public function joinCanva(JoinCanvaRequest $request, $id) {
         $canva = Canva::find($id);
         $user = Auth::user();
 
-        if (empty($canva)) {
+        if(empty($canva)) {
             return response()->json([
                 'message' => 'nothing to see here',
-                'id' => $id,
+                'id' => $canva->id
             ], 403);
         }
         $accessStatus = $canva->requestAccess($user);
-        if ($accessStatus) {
+        if($accessStatus) {
             return response()->json([
                 'message' => 'requested',
                 'accessStatus' => $accessStatus,
-                'id' => $canva->id,
+                'id' => $canva->id
             ], 200);
         } else {
             return response()->json([
                 'message' => 'nothing to see here',
-                'id' => $canva->id,
+                'id' => $canva->id
             ], 403);
         }
     }
 
-    public function toggleLike(ToggleLikeCanvaRequest $request)
-    {
+    public function toggleLike(ToggleLikeCanvaRequest $request) {
         $user = Auth::user();
         $added = $user->toggleLikeCanvas($request->canvaId);
-
         return response()->json([
-            'message' => 'canva '.($added ? 'added to favorit' : 'removed from favorit'),
+            'message' => "canva ".($added ? 'added to favorit' : 'removed from favorit'),
             'added' => $added,
-            'id' => $request->canvaId,
+            'id' => $request->canvaId
         ]);
     }
 
-    public function deleteCanva(DeleteCanvaRequest $request, $id)
-    {
+    public function deleteCanva(DeleteCanvaRequest $request, $id) {
         // DB::table('canvas')->truncate();
         $user = Auth::user();
 
@@ -208,56 +186,49 @@ class CanvaController extends Controller
         $path = ImageService::deleteImage($id);
 
         return response()->json([
-            'message' => 'deleted successfully',
-            'id' => $id,
+            'message' => "deleted successfully",
+            'id' => $id
         ]);
     }
 
-    public function replaceColors(AddColorRequest $request)
-    {
+    public function replaceColors(AddColorRequest $request) {
         $user = Auth::user();
         $canva = Canva::find($request->id);
-        if (! $canva->isOwnedBy($user)) {
+        if(!$canva->isOwnedBy($user)) {
             return response()->json([
                 'message' => 'not allowed',
-                'statue' => 403,
-            ], 403);
+                'statue' => 403
+            ],403);
         }
         $canva->colors = $request->colors;
         $canva->save();
-
         return $canva;
     }
 
-    public function updatePlayerCount(Request $request)
-    {
+    public function updatePlayerCount(Request $request) {
         $canva = Canva::findOrFail($request->id);
         $canva->live_player_count = $request->playerCount;
         $canva->save();
-
         return response()->json(201);
     }
 
-    public function placePixel(PlacePixelsRequest $request)
-    {
-        Log::info('Place pixel request received for canvas '.$request->id.' with '.count($request->pixels).' pixels.');
+    public function placePixel(PlacePixelsRequest $request) {
+        Log::info("Place pixel request received for canvas ".$request->id." with ".count($request->pixels)." pixels.");
         $canva = Canva::findOrFail($request->id);
 
-        $canvaColors = is_array($canva->colors) ? $canva->colors : json_decode($canva->colors, true);
-        $availableColors = [...$canvaColors, '#ffffff'];
+        $availableColors = [...$canva->colors, '#ffffff'];
 
         $validPixels = array_filter(
             $request->pixels,
-            function ($pixel) use ($availableColors) {
+            function ($pixel) use($availableColors) {
                 if (in_array($pixel, $availableColors)) {
                     return true;
-                }
-
+                };
                 return false;
             }
         );
         $colors = array_unique($validPixels);
-        Log::info('Updating image with colors: '.json_encode($colors));
+        Log::info("Updating image with colors: ".json_encode($colors));
 
         ImageService::updateImage($validPixels, $colors, $request->id);
 
@@ -265,7 +236,7 @@ class CanvaController extends Controller
         $canva->touch();
 
         return response()->json([
-            'status' => 'success',
+            "status" => "success"
         ], 200);
     }
 }

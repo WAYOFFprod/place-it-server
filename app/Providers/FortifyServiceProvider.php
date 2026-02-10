@@ -24,18 +24,16 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->instance(LoginResponse::class, new class implements LoginResponse
-        {
+        $this->app->instance(LoginResponse::class, new class implements LoginResponse {
             public function toResponse($request)
             {
-                return response()->json(new UserResource(Auth::user()));
+                return new UserResource(Auth::user());
             }
         });
-        $this->app->instance(RegisterResponse::class, new class implements RegisterResponse
-        {
+        $this->app->instance(RegisterResponse::class, new class implements RegisterResponse {
             public function toResponse($request)
             {
-                return response()->json(new UserResource(Auth::user()));
+                return new UserResource(Auth::user());
             }
         });
     }

@@ -6,37 +6,33 @@ namespace App\Models;
 
 use App\Enums\FriendRequestStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use Staudenmeir\LaravelMergedRelations\Eloquent\HasMergedRelationships;
-use Staudenmeir\LaravelMergedRelations\Eloquent\Relations\MergedRelation;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, HasMergedRelationships, HasRoles, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles, HasMergedRelationships;
 
     /**
      * The attributes that are mass assignable.
      *
-     * @var list<string>
+     * @var array<int, string>
      */
     protected $fillable = [
         'name',
         'email',
         'password',
         'discord_user',
-        'language',
+        'language'
     ];
 
     /**
      * The attributes that should be hidden for serialization.
      *
-     * @var list<string>
+     * @var array<int, string>
      */
     protected $hidden = [
         'password',
@@ -56,101 +52,93 @@ class User extends Authenticatable
         ];
     }
 
-    public function canvas(): HasMany
-    {
+    public function canvas() {
         return $this->hasMany(Canva::class);
     }
 
-    public function notificationSettings(): HasOne
-    {
+    public function notificationSettings() {
         return $this->hasOne(NotificationSetting::class);
     }
 
-    public function participates(): BelongsToMany
-    {
-        return $this->belongsToMany(Canva::class, 'participations')->using(ParticipationPivot::class);
+    public function participates() {
+        return $this->belongsToMany(Canva::class, 'participations');
     }
-
-    public function toggleLikeCanvas(int $canvaId): bool
-    {
+    public function toggleLikeCanvas($canvaId) {
         $isLiked = $this->likedCanvas()->where('canvas.id', $canvaId)->exists();
-        if ($isLiked) {
+        if($isLiked) {
             $this->likedCanvas()->detach($canvaId);
-
             return false;
         } else {
             $this->likedCanvas()->attach($canvaId);
-
             return true;
         }
     }
 
-    public function likedCanvas(): BelongsToMany
-    {
+    public function likedCanvas() {
         return $this->belongsToMany(Canva::class, 'likes');
     }
 
     // FRIENDSHIPS
-    public function friendsTo(): BelongsToMany
+    public function friendsTo()
     {
         return $this->belongsToMany(User::class, 'friendships', 'user_id', 'friend_id')
             ->withPivot(['status', 'user_id', 'id'])
             ->withTimestamps();
     }
 
-    public function friendsFrom(): BelongsToMany
+    public function friendsFrom()
     {
         return $this->belongsToMany(User::class, 'friendships', 'friend_id', 'user_id')
             ->withPivot(['status', 'user_id', 'id'])
             ->withTimestamps();
     }
 
-    public function friends(): MergedRelation
+    public function friends()
     {
         return $this->mergedRelationWithModel(User::class, 'friends_view');
     }
 
-    public function blocked(): MergedRelation
+    public function blocked()
     {
         return $this->mergedRelationWithModel(User::class, 'blocked_view');
     }
 
-    public function pendingFriendsTo(): BelongsToMany
+    public function pendingFriendsTo()
     {
         return $this->friendsTo()->wherePivot('status', FriendRequestStatus::Pending->value);
     }
 
-    public function pendingFriendsFrom(): BelongsToMany
+    public function pendingFriendsFrom()
     {
         return $this->friendsFrom()->wherePivot('status', FriendRequestStatus::Pending->value);
     }
 
-    public function acceptedFriendsTo(): BelongsToMany
+    public function acceptedFriendsTo()
     {
         return $this->friendsTo()->wherePivot('status', FriendRequestStatus::Accepted->value);
     }
 
-    public function acceptedFriendsFrom(): BelongsToMany
+    public function acceptedFriendsFrom()
     {
         return $this->friendsFrom()->wherePivot('status', FriendRequestStatus::Accepted->value);
     }
 
-    public function notBlockedFriendsTo(): BelongsToMany
+    public function notBlockedFriendsTo()
     {
         return $this->friendsTo()->wherePivot('status', '!=', FriendRequestStatus::Blocked->value);
     }
 
-    public function notBlockedFriendsFrom(): BelongsToMany
+    public function notBlockedFriendsFrom()
     {
         return $this->friendsFrom()->wherePivot('status', '!=', FriendRequestStatus::Blocked->value);
     }
 
-    public function blockedFriendsFrom(): BelongsToMany
+    public function blockedFriendsFrom()
     {
         return $this->friendsFrom()->wherePivot('status', FriendRequestStatus::Blocked->value);
     }
 
-    public function blockedFriendsTo(): BelongsToMany
+    public function blockedFriendsTo()
     {
         return $this->friendsTo()->wherePivot('status', FriendRequestStatus::Blocked->value);
     }

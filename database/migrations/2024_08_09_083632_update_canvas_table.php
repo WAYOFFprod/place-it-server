@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('canvas', function (Blueprint $table) {
+        Schema::table('canvas', function(Blueprint $table) {
             $table->integer('live_player_count')->default(0);
         });
     }
@@ -21,7 +21,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('canvas', function (Blueprint $table) {
+        Schema::table('canvas', function(Blueprint $table) {
             $table->dropColumn('live_player_count');
         });
     }

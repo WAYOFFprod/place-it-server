@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Canva;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -17,7 +18,7 @@ class ResetCanvaSeeder extends Seeder
         DB::table('participations')->truncate();
 
         $this->call([
-            CanvaSeeder::class,
+            CanvaSeeder::class
         ]);
     }
 }

@@ -22,8 +22,8 @@ class AddColorRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id' => 'required|integer',
-            'colors' => 'required|array',
+            "id" => 'required|integer',
+            "colors" => 'required|array'
         ];
     }
 }

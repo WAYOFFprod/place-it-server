@@ -22,7 +22,7 @@ class RespondFriendRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'friend_id' => 'required|exists:users,id',
+            'friend_id' => 'required|exists:users,id'
         ];
     }
 }
