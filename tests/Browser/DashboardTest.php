@@ -13,7 +13,9 @@ class DashboardTest extends DuskTestCase
     use DatabaseTruncation;
 
     protected $dropViews = true;
+
     protected $seed = true;
+
     protected $exceptTables = ['personal_access_tokens'];
 
     // protected function afterTruncatingDatabase(): void
@@ -23,12 +25,13 @@ class DashboardTest extends DuskTestCase
 
     /**
      * A Dusk test example.
+     *
      * @group Dashboard
      */
     public function testUpdateCanva(): void
     {
         $this->browse(function (Browser $browser) {
-            $client_url= 'http://place-it.test:5173/';
+            $client_url = 'http://place-it.test:5173/';
             $user = User::find(1);
 
             // authenticate
@@ -44,7 +47,7 @@ class DashboardTest extends DuskTestCase
                 ->assertSee('ADMIN');
 
             $canvaId = $user->canvas->first()->id;
-                // click owned canva
+            // click owned canva
             $browser
                 ->waitFor('#canva-preview-'.$canvaId, 2)
                 ->screenshot('change-canva-name-1')
@@ -63,7 +66,7 @@ class DashboardTest extends DuskTestCase
                 ->waitForText('newName')
                 ->screenshot('change-canva-name-3-dashboard')
                 ->assertSee('newName');
-                //
+            //
 
             // $browser->storeConsoleLog('filename');
         });
@@ -71,16 +74,16 @@ class DashboardTest extends DuskTestCase
 
     /**
      * A Dusk test example.
+     *
      * @group Dashboard
      * @group Participation
      */
     public function testAddParticipant(): void
     {
         $this->browse(function (Browser $browser, Browser $browser2) {
-            $client_url= 'http://place-it.test:5173/';
+            $client_url = 'http://place-it.test:5173/';
             $user = User::find(1);
             $user2 = User::find(2);
-
 
             // authenticate
             $browser->visit($client_url)
@@ -105,21 +108,21 @@ class DashboardTest extends DuskTestCase
                     ->screenshot('adding-participant-1')
                     ->click('#button-add-participant')
                     ->waitFor('#friends', 2)
-                    ->typeSlowly('friends', "user")
+                    ->typeSlowly('friends', 'user')
                     // ->click('#friends')
                     ->waitForText($user2->name, 2)
                     ->screenshot('adding-participant-2-adding')
                     ->click('#option-2');
 
-                    $inputValue = $browser->inputValue('friends');
+                $inputValue = $browser->inputValue('friends');
 
-                    $this->assertTrue($inputValue == $user2->name);
+                $this->assertTrue($inputValue == $user2->name);
 
-                    return $browser->click('#button-see-participant-list')
-                        ->waitForText($user2->name, 2)
-                        ->screenshot('adding-participant-3-added')
-                        ->assertSee($user2->name);
-            }, "could not wait for first browser to add user");
+                return $browser->click('#button-see-participant-list')
+                    ->waitForText($user2->name, 2)
+                    ->screenshot('adding-participant-3-added')
+                    ->assertSee($user2->name);
+            }, 'could not wait for first browser to add user');
 
             $browser2->click('#button-community-canvas')
                 ->waitFor('#canva-preview-1', 2);
@@ -128,13 +131,14 @@ class DashboardTest extends DuskTestCase
 
     /**
      * A Dusk test updating profile information.
+     *
      * @group Dashboard
      * @group Profile
      */
     public function testProfileUpdate(): void
     {
         $this->browse(function (Browser $browser) {
-            $client_url= 'http://place-it.test:5173/';
+            $client_url = 'http://place-it.test:5173/';
 
             // authenticate
             $browser->visit($client_url)

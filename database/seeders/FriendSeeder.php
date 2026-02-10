@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Enums\FriendRequestStatus;
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class FriendSeeder extends Seeder

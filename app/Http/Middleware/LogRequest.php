@@ -24,8 +24,8 @@ class LogRequest
         // Log::info($request->cookie('laravel_session'));
         // Log::info($request->cookie('XSRF-TOKEN'));
 
-
         $response = $next($request);
+
         // Log::info($response->cookie('laravel_session'));
         // Perform action
         return $response;

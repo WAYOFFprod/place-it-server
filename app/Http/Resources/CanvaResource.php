@@ -2,14 +2,28 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Canva;
 use App\Services\ImageService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
-use App\Enums\CanvaAccess;
-use Log;
 
+/**
+ * @property int $id
+ * @property string $name
+ * @property int $width
+ * @property int $height
+ * @property string $colors
+ * @property int $user_id
+ * @property string $category
+ * @property string $access
+ * @property string $visibility
+ * @property int $live_player_count
+ * @property \Illuminate\Support\Carbon $created_at
+ *
+ * @mixin Canva
+ */
 class CanvaResource extends JsonResource
 {
     /**
@@ -23,28 +37,29 @@ class CanvaResource extends JsonResource
         $userId = -1;
         $isLiked = false;
         $participation = false;
-        if($user) {
+        if ($user) {
             $userId = $user->id;
             $isLiked = $this->likedBy()->where('users.id', $userId)->exists();
             $participation = $this->userParticipation($userId);
         }
         $status = $participation ? $participation->status : null;
+
         return [
-            "id" => $this->id,
-            "name" => $this->name,
-            "width" => $this->width,
-            "height" => $this->height,
-            "colors" => $this->colors,
-            "owned" => $this->user_id == $userId,
-            "category" => $this->category, // pixelwar, artistic, free
-            "access" => $this->access, // open, invite_only, request_only closed
-            "visibility" => $this->visibility, // public, friends_only, private
-            "participationStatus" => $status, // null, accepted, sent, rejected
-            "image" => ImageService::getBase64Image($this->id),
-            "participants" => $this->participates()->wherePivot('status', 'accepted')->count(),
-            "isLiked" => $isLiked,
-            "created_at" => $this->created_at,
-            "currentPlayers" => $this->live_player_count
+            'id' => $this->id,
+            'name' => $this->name,
+            'width' => $this->width,
+            'height' => $this->height,
+            'colors' => $this->colors,
+            'owned' => $this->user_id == $userId,
+            'category' => $this->category, // pixelwar, artistic, free
+            'access' => $this->access, // open, invite_only, request_only closed
+            'visibility' => $this->visibility, // public, friends_only, private
+            'participationStatus' => $status, // null, accepted, sent, rejected
+            'image' => ImageService::getBase64Image($this->id),
+            'participants' => $this->participates()->wherePivot('status', 'accepted')->count(),
+            'isLiked' => $isLiked,
+            'created_at' => $this->created_at,
+            'currentPlayers' => $this->live_player_count,
         ];
     }
 
@@ -53,13 +68,13 @@ class CanvaResource extends JsonResource
         $user = Auth::user();
         $token = uniqid();
         $response = false;
-        if($user) {
+        if ($user) {
             $response = Http::asForm()
-            ->post(config('app.live_url').'/server/join/', [
-                'canva_id' => $this->id,
-                'user_id' => $user->id,
-                'token' => $token
-            ]);
+                ->post(config('app.live_url').'/server/join/', [
+                    'canva_id' => $this->id,
+                    'user_id' => $user->id,
+                    'token' => $token,
+                ]);
         }
 
         return [
