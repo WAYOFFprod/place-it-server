@@ -10,8 +10,14 @@
 
 run migration:fresh with `--drop-views` to drop views
 
-```php
+```bash
 --drop-views
+```
+
+initial migration
+
+```bash
+php artisan migrate:fresh --seed --seeder=ProdSeeder --drop-views
 ```
 
 ## nginx in prod cookie size
