@@ -19,7 +19,7 @@ use App\Services\ImageService;
 use Auth;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 class CanvaController extends Controller
 {
@@ -52,6 +52,7 @@ class CanvaController extends Controller
 
     public function getCanvas(GetCanvasRequest $request)
     {
+        /* @var User|null $user */
         $user = Auth::user();
         $canvas = [];
         $query = null;
@@ -75,9 +76,11 @@ class CanvaController extends Controller
 
     private function getCommunityCanvas(?User $user, Request $request): Builder
     {
-        $query = Canva::query()->orderBy('updated_at', 'desc')->community();
-        if ($request->favorit) {
-            $query->favorit();
+        $query = Canva::query()->community();
+        if (! empty($user)) {
+            if ($request->favorit) {
+                $query->favorit();
+            }
         }
         if ($request->sort) {
             $query->orderBy('updated_at', $request->sort);
@@ -98,12 +101,15 @@ class CanvaController extends Controller
             if ($request->favorit) {
                 $query->favorit();
             }
-            if ($request->sort) {
-                $query->orderBy('updated_at', $request->sort);
-            }
-            if ($request->search) {
-                $query->where('name', 'LIKE', '%'.$request->search.'%');
-            }
+        } else {
+            $query = Canva::query()->community();
+        }
+
+        if ($request->sort) {
+            $query->orderBy('updated_at', $request->sort);
+        }
+        if ($request->search) {
+            $query->where('name', 'LIKE', '%'.$request->search.'%');
         }
 
         return $query;
