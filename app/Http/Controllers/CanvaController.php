@@ -19,7 +19,6 @@ use App\Services\ImageService;
 use Auth;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
-use Log;
 
 class CanvaController extends Controller
 {
@@ -52,6 +51,7 @@ class CanvaController extends Controller
 
     public function getCanvas(GetCanvasRequest $request)
     {
+        /* @var User|null $user */
         $user = Auth::user();
         $canvas = [];
         $query = null;
@@ -75,9 +75,11 @@ class CanvaController extends Controller
 
     private function getCommunityCanvas(?User $user, Request $request): Builder
     {
-        $query = Canva::query()->orderBy('updated_at', 'desc')->community();
-        if ($request->favorit) {
-            $query->favorit();
+        $query = Canva::query()->community();
+        if (! empty($user)) {
+            if ($request->favorit) {
+                $query->favorit();
+            }
         }
         if ($request->sort) {
             $query->orderBy('updated_at', $request->sort);
@@ -98,12 +100,15 @@ class CanvaController extends Controller
             if ($request->favorit) {
                 $query->favorit();
             }
-            if ($request->sort) {
-                $query->orderBy('updated_at', $request->sort);
-            }
-            if ($request->search) {
-                $query->where('name', 'LIKE', '%'.$request->search.'%');
-            }
+        } else {
+            $query = Canva::query()->community();
+        }
+
+        if ($request->sort) {
+            $query->orderBy('updated_at', $request->sort);
+        }
+        if ($request->search) {
+            $query->where('name', 'LIKE', '%'.$request->search.'%');
         }
 
         return $query;
@@ -240,7 +245,6 @@ class CanvaController extends Controller
 
     public function placePixel(PlacePixelsRequest $request)
     {
-        Log::info('Place pixel request received for canvas '.$request->id.' with '.count($request->pixels).' pixels.');
         $canva = Canva::findOrFail($request->id);
 
         $canvaColors = is_array($canva->colors) ? $canva->colors : json_decode($canva->colors, true);
@@ -257,7 +261,6 @@ class CanvaController extends Controller
             }
         );
         $colors = array_unique($validPixels);
-        Log::info('Updating image with colors: '.json_encode($colors));
 
         ImageService::updateImage($validPixels, $colors, $request->id);
 
