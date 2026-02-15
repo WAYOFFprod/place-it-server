@@ -19,7 +19,6 @@ use App\Services\ImageService;
 use Auth;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 class CanvaController extends Controller
 {
@@ -246,7 +245,6 @@ class CanvaController extends Controller
 
     public function placePixel(PlacePixelsRequest $request)
     {
-        Log::info('Place pixel request received for canvas '.$request->id.' with '.count($request->pixels).' pixels.');
         $canva = Canva::findOrFail($request->id);
 
         $canvaColors = is_array($canva->colors) ? $canva->colors : json_decode($canva->colors, true);
@@ -263,7 +261,6 @@ class CanvaController extends Controller
             }
         );
         $colors = array_unique($validPixels);
-        Log::info('Updating image with colors: '.json_encode($colors));
 
         ImageService::updateImage($validPixels, $colors, $request->id);
 
