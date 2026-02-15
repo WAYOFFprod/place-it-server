@@ -66,13 +66,15 @@ class CanvaResource extends JsonResource
     public function with(Request $request): array
     {
         $user = Auth::user();
+        // get user if authenticated or generate unique id;
+        $id = $user ? $user->id : 1;
         $token = uniqid();
         $response = false;
         if ($user) {
             $response = Http::asForm()
                 ->post(config('app.live_url').'/server/join/', [
                     'canva_id' => $this->id,
-                    'user_id' => $user->id,
+                    'user_id' => $id,
                     'token' => $token,
                 ]);
         }
