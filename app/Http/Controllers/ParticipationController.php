@@ -19,7 +19,7 @@ class ParticipationController extends Controller
         $user = Auth::user();
 
         /** @var Canva $canva */
-        $canva = $user->canvas()->findOrFail($request->canva_id);
+        $canva = $user->canvases()->findOrFail($request->canva_id);
 
         return $canva->participates()->attach($request->user_id, [
             'status' => ParticipationStatus::Invited->value,
@@ -28,7 +28,7 @@ class ParticipationController extends Controller
 
     public function requestAccess(RequestAccessRequest $request)
     {
-        //TODO: check canva type to see if it allows requests
+        // TODO: check canva type to see if it allows requests
         $user = Auth::user();
 
         /** @var Canva $canva */
@@ -49,7 +49,7 @@ class ParticipationController extends Controller
     {
         $user = Auth::user();
         /** @var Canva $canva */
-        $canva = $user->canvas()->findOrFail($request->canva_id);
+        $canva = $user->canvases()->findOrFail($request->canva_id);
 
         $participationQuery = $canva->participates()->where('user_id', $request->user_id);
         $userWithParticipation = $participationQuery->first();
@@ -89,7 +89,7 @@ class ParticipationController extends Controller
     {
         $user = Auth::user();
         /** @var Canva $canva */
-        $canva = $user->canvas()->findOrFail($request->canva_id);
+        $canva = $user->canvases()->findOrFail($request->canva_id);
 
         $participationQuery = $canva->participates()->where('user_id', $request->user_id);
         $userWithParticipation = $participationQuery->first();
@@ -117,7 +117,7 @@ class ParticipationController extends Controller
     {
         $user = Auth::user();
         /** @var Canva $canva */
-        $canva = $user->canvas()->findOrFail($id);
+        $canva = $user->canvases()->findOrFail($id);
 
         return ParticipationResource::collection($canva->participates()->get()->except($user->id));
     }

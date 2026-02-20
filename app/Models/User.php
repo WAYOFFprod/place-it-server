@@ -56,7 +56,7 @@ class User extends Authenticatable
         ];
     }
 
-    public function canvas(): HasMany
+    public function canvases(): HasMany
     {
         return $this->hasMany(Canva::class);
     }
