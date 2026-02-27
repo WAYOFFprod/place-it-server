@@ -59,7 +59,7 @@ RUN php artisan config:clear --no-interaction || true && \
   php artisan cache:clear --no-interaction || true
 
 # Copy nginx configuration
-COPY Docker/nginx.conf /etc/nginx/http.d/default.conf
+COPY docker/nginx.conf /etc/nginx/http.d/default.conf
 
 # Copy PHP-FPM configuration
 RUN echo "pm = dynamic" >> /usr/local/etc/php-fpm.d/www.conf && \
@@ -69,7 +69,7 @@ RUN echo "pm = dynamic" >> /usr/local/etc/php-fpm.d/www.conf && \
   echo "pm.max_spare_servers = 20" >> /usr/local/etc/php-fpm.d/www.conf
 
 # Copy supervisor configuration
-COPY Docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # Expose port 8080
 EXPOSE 8080
