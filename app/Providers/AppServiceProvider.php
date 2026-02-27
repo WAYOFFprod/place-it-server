@@ -22,6 +22,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // force https for filament assets
         if ($this->app->environment('production', 'staging') && (
             filter_var(env('FORCE_HTTPS', false), FILTER_VALIDATE_BOOL)
             || str_starts_with((string) config('app.url'), 'https://')
