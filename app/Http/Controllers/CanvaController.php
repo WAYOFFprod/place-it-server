@@ -120,7 +120,7 @@ class CanvaController extends Controller
         $user = Auth::user();
 
         /** @var Canva $canva */
-        $canva = $user->canvas()->create([
+        $canva = $user->canvases()->create([
             'name' => $request->name,
             'category' => $request->category,
             'access' => $request->access,
@@ -206,7 +206,7 @@ class CanvaController extends Controller
         // DB::table('canvas')->truncate();
         $user = Auth::user();
 
-        $canva = $user->canvas()->find($id);
+        $canva = $user->canvases()->find($id);
 
         $canva->delete();
 

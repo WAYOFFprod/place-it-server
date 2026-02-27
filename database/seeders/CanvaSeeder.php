@@ -69,7 +69,7 @@ class CanvaSeeder extends Seeder
             $user->participates()->attach($canva->id, ['status' => 'accepted']);
             $imageCreated = ImageService::createImage($canva->id, $canva->width, $canva->height);
         }
-        $user->canvas()->saveMany($canvas);
+        $user->canvases()->saveMany($canvas);
     }
 
     private function createPublicCanvas($user)
@@ -97,7 +97,7 @@ class CanvaSeeder extends Seeder
             $user->participates()->attach($canva->id, ['status' => 'accepted']);
             $imageCreated = ImageService::createImage($canva->id, $canva->width, $canva->height);
         }
-        $user->canvas()->saveMany($canvas);
+        $user->canvases()->saveMany($canvas);
     }
 
     private function participateInHalfCanvas(User $user)

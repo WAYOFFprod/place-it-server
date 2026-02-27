@@ -19,4 +19,14 @@ class ParticipationPivot extends Pivot
     protected $casts = [
         'status' => 'string',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function canva()
+    {
+        return $this->belongsTo(Canva::class);
+    }
 }

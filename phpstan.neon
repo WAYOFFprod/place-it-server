@@ -12,6 +12,6 @@ parameters:
         - '#Call to private method find\(\) of parent class Illuminate\\Database\\Eloquent\\Relations\\HasMany#'
 
 #
-#    excludePaths:
-#        - ./*/*/FileToBeExcluded.php
+    excludePaths:
+        - ./phpstorm.meta.php
     
