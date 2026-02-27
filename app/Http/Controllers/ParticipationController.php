@@ -36,13 +36,21 @@ class ParticipationController extends Controller
         $canva = Canva::find($request->canva_id);
 
         if ($canva->access == CanvaAccess::RequestOnly->value) {
-            return $canva->participates()->attach($user->id, [
+            $canva->participates()->attach($user->id, [
                 'status' => ParticipationStatus::Invited->value,
             ]);
+            return response()->json([
+                'message' => "access requested, waiting for approval",
+                'status' => 200,
+            ], 200);
         } elseif ($canva->access == CanvaAccess::Open->value) {
-            return $canva->participates()->attach($user->id, [
+            $canva->participates()->attach($user->id, [
                 'status' => ParticipationStatus::Accepted->value,
             ]);
+            return response()->json([
+                'message' => "access granted to this canva",
+                'status' => 200,
+            ], 200);
         }
 
         return response()->json([
