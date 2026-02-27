@@ -28,7 +28,7 @@ class AuthTest extends DuskTestCase
      *
      * @group Auth
      */
-    public function testLogin(): void
+    public function test_login(): void
     {
         $this->browse(function (Browser $browser) {
             // $client_url = env('DUSK_CLIENT', 'http://place-it.test:5173/');
@@ -56,7 +56,7 @@ class AuthTest extends DuskTestCase
      *
      * @group Auth
      */
-    public function testRegistration(): void
+    public function test_registration(): void
     {
         $this->browse(function (Browser $browser) {
             // $client_url = env('DUSK_CLIENT', 'http://place-it.test:5173/');

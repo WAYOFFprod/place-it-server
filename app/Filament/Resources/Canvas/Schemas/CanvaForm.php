@@ -26,11 +26,11 @@ class CanvaForm
                     ->options(['pixelwar' => 'Pixelwar', 'artistic' => 'Artistic', 'free' => 'Free']),
                 Select::make('access')
                     ->options([
-            'open' => 'Open',
-            'invite_only' => 'Invite only',
-            'request_only' => 'Request only',
-            'closed' => 'Closed',
-        ]),
+                        'open' => 'Open',
+                        'invite_only' => 'Invite only',
+                        'request_only' => 'Request only',
+                        'closed' => 'Closed',
+                    ]),
                 Select::make('visibility')
                     ->options(['public' => 'Public', 'friends_only' => 'Friends only', 'private' => 'Private'])
                     ->required(),

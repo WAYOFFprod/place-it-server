@@ -16,6 +16,7 @@ class ParticipationController extends Controller
 {
     public function invite(AddParticipantRequest $request)
     {
+        /** @var User $user */
         $user = Auth::user();
 
         /** @var Canva $canva */
@@ -43,10 +44,16 @@ class ParticipationController extends Controller
                 'status' => ParticipationStatus::Accepted->value,
             ]);
         }
+
+        return response()->json([
+            'message' => "can't request access to this canva",
+            'status' => 403,
+        ], 403);
     }
 
     public function acceptRequest(AddParticipantRequest $request)
     {
+        /** @var User $user */
         $user = Auth::user();
         /** @var Canva $canva */
         $canva = $user->canvases()->findOrFail($request->canva_id);
@@ -87,6 +94,7 @@ class ParticipationController extends Controller
 
     public function rejectRequest(AddParticipantRequest $request)
     {
+        /** @var User $user */
         $user = Auth::user();
         /** @var Canva $canva */
         $canva = $user->canvases()->findOrFail($request->canva_id);
@@ -115,6 +123,7 @@ class ParticipationController extends Controller
 
     public function getParticipants(Request $request, $id)
     {
+        /** @var User $user */
         $user = Auth::user();
         /** @var Canva $canva */
         $canva = $user->canvases()->findOrFail($id);

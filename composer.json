@@ -18,7 +18,7 @@
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^3.0",
         "fakerphp/faker": "^1.23",
-        "larastan/larastan": "^3.9",
+        "larastan/larastan": "^3.0",
         "laravel/dusk": "^8.2",
         "laravel/pint": "^1.13",
         "laravel/sail": "^1.26",
@@ -59,7 +59,9 @@
             "@php artisan key:generate --ansi",
             "@php -r \"file_exists('database/database.sqlite') || touch('database/database.sqlite');\"",
             "@php artisan migrate --graceful --ansi"
-        ]
+        ],
+        "larastan": "vendor/bin/phpstan analyse --memory-limit=2G",
+        "pint": "vendor/bin/pint --preset=laravel"
     },
     "extra": {
         "laravel": {

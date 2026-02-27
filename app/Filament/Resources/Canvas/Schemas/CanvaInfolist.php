@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Canvas\Schemas;
 
 use Filament\Infolists\Components\TextEntry;
+use Filament\Schemas\Components\Fieldset;
 use Filament\Schemas\Schema;
 
 class CanvaInfolist
@@ -11,9 +12,13 @@ class CanvaInfolist
     {
         return $schema
             ->components([
-                TextEntry::make('user_id')
-                    ->numeric()
-                    ->placeholder('-'),
+                Fieldset::make('owner')
+                    ->schema([
+                        TextEntry::make('owner.name')
+                            ->placeholder('-'),
+                        TextEntry::make('owner.email')
+                            ->placeholder('-'),
+                    ]),
                 TextEntry::make('name'),
                 TextEntry::make('width')
                     ->numeric(),
@@ -35,6 +40,7 @@ class CanvaInfolist
                     ->placeholder('-'),
                 TextEntry::make('live_player_count')
                     ->numeric(),
+
             ]);
     }
 }
