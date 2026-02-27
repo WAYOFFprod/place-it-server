@@ -66,8 +66,7 @@
     "extra": {
         "laravel": {
             "dont-discover": [
-                "barryvdh/laravel-ide-helper",
-                "Laravel\\Dusk\\DuskServiceProvider"
+                "barryvdh/laravel-ide-helper"
             ]
         }
     },
