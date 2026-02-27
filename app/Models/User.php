@@ -5,6 +5,8 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 use App\Enums\FriendRequestStatus;
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -16,7 +18,7 @@ use Spatie\Permission\Traits\HasRoles;
 use Staudenmeir\LaravelMergedRelations\Eloquent\HasMergedRelationships;
 use Staudenmeir\LaravelMergedRelations\Eloquent\Relations\MergedRelation;
 
-class User extends Authenticatable
+class User extends Authenticatable implements FilamentUser
 {
     use HasApiTokens, HasFactory, HasMergedRelationships, HasRoles, Notifiable;
 
@@ -56,7 +58,7 @@ class User extends Authenticatable
         ];
     }
 
-    public function canvas(): HasMany
+    public function canvases(): HasMany
     {
         return $this->hasMany(Canva::class);
     }
@@ -153,5 +155,10 @@ class User extends Authenticatable
     public function blockedFriendsTo(): BelongsToMany
     {
         return $this->friendsTo()->wherePivot('status', FriendRequestStatus::Blocked->value);
+    }
+
+    public function canAccessPanel(Panel $panel): bool
+    {
+        return $this->hasRole('admin');
     }
 }

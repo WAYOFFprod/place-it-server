@@ -28,7 +28,7 @@ class DashboardTest extends DuskTestCase
      *
      * @group Dashboard
      */
-    public function testUpdateCanva(): void
+    public function test_update_canva(): void
     {
         $this->browse(function (Browser $browser) {
             $client_url = 'http://place-it.test:5173/';
@@ -78,7 +78,7 @@ class DashboardTest extends DuskTestCase
      * @group Dashboard
      * @group Participation
      */
-    public function testAddParticipant(): void
+    public function test_add_participant(): void
     {
         $this->browse(function (Browser $browser, Browser $browser2) {
             $client_url = 'http://place-it.test:5173/';
@@ -135,7 +135,7 @@ class DashboardTest extends DuskTestCase
      * @group Dashboard
      * @group Profile
      */
-    public function testProfileUpdate(): void
+    public function test_profile_update(): void
     {
         $this->browse(function (Browser $browser) {
             $client_url = 'http://place-it.test:5173/';

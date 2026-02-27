@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Route;
 /**
  * Canvas
  */
-//liveserver
+// liveserver
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/place-pixel', [CanvaController::class, 'placePixel'])
         ->middleware(['abilities:canvas:place-pixels']);

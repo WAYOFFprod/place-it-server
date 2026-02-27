@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::createMergeView(
             'friends_view',
-            [(new User())->notBlockedFriendsTo()->withPivot('user_id'), (new User())->notBlockedFriendsFrom()->withPivot('user_id')]
+            [(new User)->notBlockedFriendsTo()->withPivot('user_id'), (new User)->notBlockedFriendsFrom()->withPivot('user_id')]
         );
 
     }
