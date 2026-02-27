@@ -10,6 +10,7 @@ use Filament\Tables\Table;
 class CanvasesRelationManager extends RelationManager
 {
     protected static string $relationship = 'canvases';
+    protected static ?string $title = 'Canvases';
 
     protected static ?string $relatedResource = CanvaResource::class;
 

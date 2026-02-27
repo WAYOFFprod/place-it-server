@@ -10,7 +10,7 @@ use Filament\Tables\Table;
 class FriendsRelationManager extends RelationManager
 {
     protected static string $relationship = 'friends';
-
+    protected static ?string $title = 'Friends';
     protected static ?string $relatedResource = UserResource::class;
 
     public function table(Table $table): Table
