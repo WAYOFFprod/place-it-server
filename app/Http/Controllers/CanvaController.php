@@ -16,9 +16,9 @@ use App\Http\Resources\CanvaResource;
 use App\Models\Canva;
 use App\Models\User;
 use App\Services\ImageService;
-use Auth;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CanvaController extends Controller
 {
@@ -88,7 +88,7 @@ class CanvaController extends Controller
             $query->where('name', 'LIKE', '%'.$request->search.'%');
         }
 
-        return $query;
+        return $this->applyFilters($query, $request);
     }
 
     private function getPersonalCanvas(?User $user, Request $request): Builder
@@ -104,11 +104,21 @@ class CanvaController extends Controller
             $query = Canva::query()->community();
         }
 
+                
+
+        return $this->applyFilters($query, $request);
+    }
+
+    private function applyFilters(Builder $query, Request $request): Builder
+    {
         if ($request->sort) {
             $query->orderBy('updated_at', $request->sort);
         }
         if ($request->search) {
             $query->where('name', 'LIKE', '%'.$request->search.'%');
+        }
+        if ($request->category) {
+            $query->where('category', $request->category);
         }
 
         return $query;
@@ -192,6 +202,7 @@ class CanvaController extends Controller
     public function toggleLike(ToggleLikeCanvaRequest $request)
     {
         $user = Auth::user();
+        /** @var User $user */
         $added = $user->toggleLikeCanvas($request->canvaId);
 
         return response()->json([
@@ -204,6 +215,7 @@ class CanvaController extends Controller
     public function deleteCanva(DeleteCanvaRequest $request, $id)
     {
         // DB::table('canvas')->truncate();
+        /** @var User $user */
         $user = Auth::user();
 
         $canva = $user->canvases()->find($id);
